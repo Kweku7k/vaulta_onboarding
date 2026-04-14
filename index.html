@@ -1390,6 +1390,41 @@
     </main>
   </div>
 
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+  <script>
+    // ── Firebase configuration ────────────────────────────────
+    // Replace these values with your Firebase project credentials
+    // var firebaseConfig = {
+    //   apiKey:            'YOUR_API_KEY',
+    //   authDomain:        'YOUR_PROJECT_ID.firebaseapp.com',
+    //   projectId:         'YOUR_PROJECT_ID',
+    //   storageBucket:     'YOUR_PROJECT_ID.appspot.com',
+    //   messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
+    //   appId:             'YOUR_APP_ID'
+    // };
+
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyBvCTmggya8ZRyXZmUjQm99qUWBoVB9eeI",
+      authDomain: "prestoqchats.firebaseapp.com",
+      projectId: "prestoqchats",
+      storageBucket: "temp_v_db2",
+      messagingSenderId: "355368008486",
+      appId: "1:355368008486:web:623404dccafb9046e51fe7",
+      measurementId: "G-FTS2L3C4XP"
+    };
+    firebase.initializeApp(firebaseConfig);
+    var __storage = firebase.storage();
+
+    window.__uploadToFirebase = async function (file, storagePath) {
+      var ref = __storage.ref(storagePath);
+      await ref.put(file);
+      return await ref.getDownloadURL();
+    };
+  </script>
+
   <script>
   (function () {
     'use strict';
@@ -1648,19 +1683,46 @@
 
     addUboCard();
 
+    // ── Uploaded file URL map (populated immediately on file select) ─────
+    var uploadedUrls = {};
+
     // ── Dropzone: drag & drop + preview ─────────────────────
     document.querySelectorAll('.dropzone').forEach(function (dz) {
       var input = dz.querySelector('input[type="file"]');
       var nameEl = dz.querySelector('.file-chip-name');
       var sizeEl = dz.querySelector('.file-chip-size');
       var removeBtn = dz.querySelector('.file-chip-remove');
+      var fieldName = input ? input.name : null;
 
-      function showFile(file) {
+      async function showFile(file) {
         if (!file) return;
         nameEl.textContent = file.name;
-        sizeEl.textContent = formatBytes(file.size);
+        sizeEl.textContent = 'Uploading…';
         dz.classList.add('has-file');
         updateProgress();
+
+        // Upload immediately to Firebase Storage
+        if (fieldName && typeof window.__uploadToFirebase === 'function') {
+          var refId = window.__ONBOARDING_REFERENCE_ID || 'unknown';
+          var storagePath = 'onboarding/' + refId + '/' + fieldName + '/' + Date.now() + '_' + file.name;
+          try {
+            var url = await window.__uploadToFirebase(file, storagePath);
+            uploadedUrls[fieldName] = url;
+            sizeEl.textContent = formatBytes(file.size);
+          } catch (uploadErr) {
+            showToast('Upload failed for ' + file.name + '. Please try again.', 'error');
+            delete uploadedUrls[fieldName];
+            input.value = '';
+            nameEl.textContent = '';
+            sizeEl.textContent = '';
+            dz.classList.remove('has-file');
+            updateProgress();
+            return;
+          }
+        } else {
+          sizeEl.textContent = formatBytes(file.size);
+        }
+
         // Auto-advance
         setTimeout(function () {
           var sec = dz.closest('.accordion-item[data-section]');
@@ -1675,6 +1737,7 @@
       }
 
       function clearFile() {
+        if (fieldName) delete uploadedUrls[fieldName];
         input.value = '';
         nameEl.textContent = '';
         sizeEl.textContent = '';
@@ -1740,18 +1803,21 @@
       submitBtn.classList.add('loading');
       submitBtn.disabled = true;
       try {
-        var formData = new FormData(form);
-        formData.set('reference_id', window.__ONBOARDING_REFERENCE_ID || '');
-        if (inquiryId) {
-          formData.set('inquiry_id', inquiryId);
-        } else {
-          formData.delete('inquiry_id');
-        }
-        formData.set('phone', fullPhone);
-        formData.delete('persona_inquiry_id');
-        formData.delete('phone-full');
+        // Build URL-encoded payload — files already uploaded, use stored URLs
+        var params = new URLSearchParams();
+        params.set('reference_id', window.__ONBOARDING_REFERENCE_ID || '');
+        if (inquiryId) params.set('inquiry_id', inquiryId);
+        params.set('full_name',    form.querySelector('[name="full_name"]').value);
+        params.set('company_name', form.querySelector('[name="company_name"]').value);
+        params.set('email',        form.querySelector('[name="email"]').value);
+        params.set('phone',        fullPhone);
+        Object.keys(uploadedUrls).forEach(function (key) { params.set(key, uploadedUrls[key]); });
 
-        var resp = await fetch(window.__ONBOARDING_API_BASE + '/api/v1/onboarding/complete', { method: 'POST', body: formData });
+        var resp = await fetch(window.__ONBOARDING_API_BASE + '/api/v1/onboarding/complete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: params.toString()
+        });
         var result = await resp.json();
         if (resp.ok) {
           var overlay = document.getElementById('success-modal-overlay');
@@ -1791,6 +1857,7 @@
     'use strict';
 
     var API_BASE = 'https://backend.vaulta.digital';
+    // var API_BASE = 'https://36c0-154-161-128-38.ngrok-free.app';
     window.__ONBOARDING_API_BASE = API_BASE;
 
     var btn = document.getElementById('persona-verify-btn');
