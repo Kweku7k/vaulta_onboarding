@@ -1331,13 +1331,13 @@
             </div>
 
             <div class="documents-toolbar">
-              <p class="section-subcopy" style="margin-top: 0;">Upload documents within the sections above, then persist the current set of URLs to the onboarding record.</p>
+              <p class="section-subcopy" style="margin-top: 0;">Documents are auto-saved after upload. Use this button to retry any document URL saves that failed.</p>
               <div class="save-row" style="margin-bottom: 0;">
                 <div>
                   <p id="document-helper" class="document-helper">No saved document URLs yet.</p>
                   <span id="documents-status" class="status-chip pending">Not saved yet</span>
                 </div>
-                <button type="button" id="save-documents-btn" class="primary-btn">Save document URLs</button>
+                <button type="button" id="save-documents-btn" class="primary-btn">Retry document saves</button>
               </div>
             </div>
 
@@ -1626,6 +1626,34 @@
       });
     }
 
+    function getUnsyncedDocumentKeys() {
+      var keys = {};
+      Object.keys(state.pendingDocuments).forEach(function (key) { keys[key] = true; });
+      return Object.keys(keys).filter(function (key) {
+        var pending = state.pendingDocuments[key] || '';
+        var saved = state.documents[key] || '';
+        return !!pending && pending !== saved;
+      });
+    }
+
+    async function persistSingleDocument(field, url) {
+      var response = await fetch(API_BASE + '/api/v2/onboarding/documents', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          reference_id: state.referenceId,
+          field: field,
+          url: url
+        })
+      });
+      var data = await response.json();
+      var payload = parsePayload(data);
+      if (!response.ok) {
+        throw new Error(payload.detail || 'Could not save document URL.');
+      }
+      return payload;
+    }
+
     function updateDocumentState() {
       var readyCount = REQUIRED_DOCUMENT_KEYS.filter(function (key) { return !!state.pendingDocuments[key]; }).length;
       var requiredSaved = REQUIRED_DOCUMENT_KEYS.every(function (key) { return !!state.documents[key]; });
@@ -1636,7 +1664,7 @@
         document.getElementById('document-helper').textContent = 'All required document URLs are saved.';
         setStatusChip(document.getElementById('documents-status'), 'success', 'Saved');
       } else if (readyCount === REQUIRED_DOCUMENT_KEYS.length) {
-        document.getElementById('document-helper').textContent = 'All required files are uploaded. Save document URLs to persist them.';
+        document.getElementById('document-helper').textContent = 'All required files are uploaded. Some URL saves are still pending.';
         setStatusChip(document.getElementById('documents-status'), 'info', 'Uploaded, not saved');
       } else {
         document.getElementById('document-helper').textContent = readyCount + ' of ' + REQUIRED_DOCUMENT_KEYS.length + ' required document groups ready.';
@@ -1741,8 +1769,17 @@
           try {
             var url = await uploadToFirebase(file, makeStoragePath(docKey, file.name));
             state.pendingDocuments[docKey] = url;
-            setDropzonePreview(dropzone, url, file.name, formatBytes(file.size) + ' - Uploaded, not saved', false);
-            showToast('Uploaded ' + file.name + '.', 'success');
+            setDropzonePreview(dropzone, url, file.name, formatBytes(file.size) + ' - Uploaded, saving URL...', false);
+
+            try {
+              await persistSingleDocument(docKey, url);
+              state.documents[docKey] = url;
+              setDropzonePreview(dropzone, url, file.name, formatBytes(file.size) + ' - Saved URL', true);
+              showToast('Uploaded and saved ' + file.name + '.', 'success');
+            } catch (saveErr) {
+              setDropzonePreview(dropzone, url, file.name, formatBytes(file.size) + ' - Uploaded, not saved', false);
+              showToast(saveErr.message || 'Uploaded, but could not save URL.', 'error');
+            }
           } catch (err) {
             delete state.pendingDocuments[docKey];
             clearDropzone(dropzone);
@@ -2128,36 +2165,24 @@
         return;
       }
 
-      var missingKeys = REQUIRED_DOCUMENT_KEYS.filter(function (key) {
-        return !state.pendingDocuments[key];
-      });
-      if (missingKeys.length) {
-        showToast('Upload all required documents before saving URLs.', 'error');
+      var unsyncedKeys = getUnsyncedDocumentKeys();
+      if (!unsyncedKeys.length) {
+        showToast('All uploaded document URLs are already saved.', 'success');
+        updateDocumentState();
         return;
       }
-
-      var documents = Object.assign({}, state.pendingDocuments);
 
       var button = document.getElementById('save-documents-btn');
       button.disabled = true;
       setStatusChip(document.getElementById('documents-status'), 'pending', 'Saving');
 
       try {
-        var response = await fetch(API_BASE + '/api/v2/onboarding/documents', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            reference_id: state.referenceId,
-            documents: documents
-          })
-        });
-        var data = await response.json();
-        var payload = parsePayload(data);
-        if (!response.ok) {
-          throw new Error(payload.detail || 'Could not save document URLs.');
+        for (var i = 0; i < unsyncedKeys.length; i += 1) {
+          var key = unsyncedKeys[i];
+          await persistSingleDocument(key, state.pendingDocuments[key]);
+          state.documents[key] = state.pendingDocuments[key];
         }
 
-        state.documents = Object.assign({}, documents);
         document.querySelectorAll('.dropzone[data-doc-key]').forEach(function (dropzone) {
           var key = dropzone.dataset.docKey;
           if (state.documents[key]) {
@@ -2165,11 +2190,11 @@
           }
         });
         updateDocumentState();
-        showToast('Document URLs saved.', 'success');
+        showToast('Document URL sync complete.', 'success');
       } catch (err) {
         setStatusChip(document.getElementById('documents-status'), 'error', 'Save failed');
         updateProgress();
-        showToast(err.message || 'Could not save document URLs.', 'error');
+        showToast(err.message || 'Could not save one or more document URLs.', 'error');
       } finally {
         button.disabled = false;
       }
