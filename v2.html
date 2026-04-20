@@ -1,0 +1,2367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Onboarding v2 - Vaulta</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      color-scheme: light;
+      --accent: #ca8a04;
+      --accent-hover: #eab308;
+      --accent-bg: rgba(202,138,4,.06);
+      --green: #0ea879;
+      --green-bg: #ecfdf5;
+      --green-border: #a7f3d0;
+      --red: #df1b41;
+      --red-bg: #fef2f2;
+      --red-border: #fecaca;
+      --blue: #2563eb;
+      --blue-bg: #eff6ff;
+      --blue-border: #bfdbfe;
+      --gray-50: #f7f8fa;
+      --gray-100: #f1f3f5;
+      --gray-200: #e3e5e8;
+      --gray-300: #d0d3d9;
+      --gray-400: #9da1a8;
+      --gray-500: #697077;
+      --gray-600: #535961;
+      --gray-700: #3c4149;
+      --gray-900: #1a1a2e;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 2px 4px rgba(0,0,0,.04), 0 0 0 1px rgba(0,0,0,.03);
+      --shadow-md: 0 4px 16px rgba(0,0,0,.06), 0 0 0 1px rgba(0,0,0,.03);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,.08), 0 0 0 1px rgba(0,0,0,.03);
+      --ease: cubic-bezier(.4,0,.2,1);
+      --duration: 200ms;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-900);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .shell { min-height: 100vh; display: flex; flex-direction: column; }
+
+    .top-bar {
+      height: 56px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fff;
+      border-bottom: 1px solid var(--gray-200);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--gray-900);
+      text-decoration: none;
+    }
+
+    .env-badge {
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 500;
+      background: var(--accent-bg);
+      color: var(--accent);
+      letter-spacing: .02em;
+    }
+
+    .layout {
+      flex: 1;
+      padding: 32px 24px 48px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .layout-inner {
+      width: 100%;
+      max-width: 1080px;
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 28px;
+      align-items: flex-start;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      padding: 32px;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .heading {
+      font-size: 22px;
+      line-height: 1.35;
+      font-weight: 600;
+      color: var(--gray-900);
+      margin: 0 0 6px;
+    }
+
+    .intro {
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--gray-500);
+      max-width: 64ch;
+      margin: 0 0 6px;
+    }
+
+    .required-note {
+      font-size: 12px;
+      color: var(--gray-400);
+      margin: 0 0 24px;
+    }
+
+    .required-note strong { font-weight: 600; color: var(--gray-600); }
+
+    .reference-banner {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: end;
+      padding: 18px;
+      margin-bottom: 22px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, #fffbeb, #fff);
+      border: 1px solid #fde68a;
+    }
+
+    .reference-title {
+      margin: 0 0 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-900);
+    }
+
+    .reference-copy {
+      margin: 0;
+      font-size: 12px;
+      color: var(--gray-500);
+      line-height: 1.6;
+    }
+
+    .reference-code {
+      margin-top: 10px;
+      display: inline-flex;
+      align-items: center;
+      min-height: 36px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-900);
+      letter-spacing: .04em;
+    }
+
+    .reference-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .inline-form {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .inline-form .text-input {
+      width: 220px;
+    }
+
+    .sections {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 0;
+    }
+
+    .accordion-item {
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      background: #fff;
+      overflow: visible;
+      transition: box-shadow var(--duration) var(--ease);
+      box-shadow: 0 2px 8px rgba(0,0,0,.03);
+    }
+
+    .accordion-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 18px;
+      cursor: default;
+      background: transparent;
+      border: 0;
+      width: 100%;
+      text-align: left;
+      transition: background var(--duration) var(--ease);
+    }
+
+    .accordion-header:hover { background: transparent; }
+    .accordion-header:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 2px; }
+
+    .accordion-header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .section-check {
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      border: 1.5px solid var(--gray-300);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all var(--duration) var(--ease);
+      color: transparent;
+    }
+
+    .section-check svg { width: 11px; height: 11px; }
+
+    .accordion-item.done .section-check {
+      background: var(--green);
+      border-color: var(--green);
+      color: #fff;
+    }
+
+    .accordion-header-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+
+    .accordion-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-900);
+    }
+
+    .accordion-item.done .accordion-title { color: var(--gray-400); }
+
+    .accordion-subtitle {
+      font-size: 12px;
+      color: var(--gray-400);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .accordion-icon {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      color: var(--gray-400);
+      display: none;
+    }
+
+    .accordion-body {
+      max-height: none;
+      overflow: visible;
+      padding: 2px 18px 18px;
+      border-top: 1px solid var(--gray-200);
+    }
+
+    .section-subcopy {
+      font-size: 12px;
+      color: var(--gray-500);
+      margin: 4px 0 14px;
+      line-height: 1.6;
+    }
+
+    .field { margin-bottom: 16px; }
+    .field:last-child { margin-bottom: 0; }
+
+    .field > label:first-child {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-700);
+      margin-bottom: 6px;
+    }
+
+    .required { color: var(--red); margin-left: 2px; }
+
+    .hint {
+      font-size: 11px;
+      color: var(--gray-400);
+      margin: 6px 0 0;
+      line-height: 1.5;
+    }
+
+    .text-input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--gray-900);
+      background: #fff;
+      outline: none;
+      transition: border-color var(--duration) var(--ease), box-shadow var(--duration) var(--ease);
+    }
+
+    .text-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(202,138,4,.1);
+    }
+
+    .text-input::placeholder { color: var(--gray-400); }
+
+    .phone-input-wrap {
+      display: flex;
+      gap: 0;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      transition: border-color var(--duration) var(--ease), box-shadow var(--duration) var(--ease);
+    }
+
+    .phone-input-wrap:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(202,138,4,.1);
+    }
+
+    .country-code-select {
+      appearance: none;
+      border: none;
+      outline: none;
+      background: var(--gray-50);
+      border-right: 1px solid var(--gray-200);
+      padding: 10px 8px 10px 12px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--gray-900);
+      cursor: pointer;
+      flex-shrink: 0;
+      min-width: 82px;
+      max-width: 112px;
+    }
+
+    .phone-input-wrap .text-input {
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+      flex: 1;
+    }
+
+    .save-row,
+    .ubo-section-tools,
+    .document-section-tools {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .status-chip {
+      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-weight: 500;
+      background: var(--gray-100);
+      color: var(--gray-600);
+      border: 1px solid transparent;
+    }
+
+    .status-chip.success {
+      color: #166534;
+      background: var(--green-bg);
+      border-color: var(--green-border);
+    }
+
+    .status-chip.pending {
+      color: var(--accent);
+      background: var(--accent-bg);
+    }
+
+    .status-chip.error {
+      color: var(--red);
+      background: var(--red-bg);
+      border-color: var(--red-border);
+    }
+
+    .status-chip.info {
+      color: var(--blue);
+      background: var(--blue-bg);
+      border-color: var(--blue-border);
+    }
+
+    .primary-btn,
+    .secondary-btn,
+    .ghost-btn,
+    .persona-btn,
+    .ubo-verify-btn,
+    .rail-button,
+    .submit-btn,
+    .icon-btn {
+      appearance: none;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 150ms var(--ease);
+    }
+
+    .primary-btn,
+    .submit-btn,
+    .persona-btn,
+    .ubo-verify-btn {
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 9px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      background: var(--gray-900);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .primary-btn:hover,
+    .submit-btn:hover:not(:disabled),
+    .persona-btn:hover,
+    .ubo-verify-btn:hover:not(:disabled) { background: var(--gray-700); }
+
+    .secondary-btn,
+    .rail-button,
+    .ghost-btn,
+    .icon-btn {
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      background: #fff;
+      color: var(--gray-700);
+      padding: 9px 14px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .secondary-btn:hover,
+    .rail-button:hover,
+    .ghost-btn:hover,
+    .icon-btn:hover { background: var(--gray-50); border-color: var(--gray-300); }
+
+    .primary-btn:disabled,
+    .secondary-btn:disabled,
+    .ghost-btn:disabled,
+    .persona-btn:disabled,
+    .ubo-verify-btn:disabled,
+    .submit-btn:disabled,
+    .icon-btn:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .persona-divider {
+      margin: 24px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .persona-divider::before,
+    .persona-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--gray-200);
+    }
+
+    .persona-divider-text {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .persona-card {
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      background: #fff;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .persona-icon-wrap {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, #dbeafe, #ede9fe);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--accent);
+    }
+
+    .persona-icon-wrap svg { width: 20px; height: 20px; }
+    .persona-content { flex: 1; min-width: 0; }
+    .persona-title { font-size: 14px; font-weight: 600; color: var(--gray-900); margin: 0 0 4px; }
+
+    .persona-description {
+      font-size: 13px;
+      color: var(--gray-500);
+      line-height: 1.6;
+      margin: 0 0 14px;
+    }
+
+    .persona-status {
+      margin-top: 12px;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      display: none;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .persona-status svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    .persona-status.status-completed {
+      display: flex;
+      color: #166534;
+      background: var(--green-bg);
+      border: 1px solid var(--green-border);
+    }
+
+    .persona-status.status-failed {
+      display: flex;
+      color: var(--red);
+      background: var(--red-bg);
+      border: 1px solid var(--red-border);
+    }
+
+    .ubo-helper,
+    .document-helper {
+      font-size: 12px;
+      color: var(--gray-500);
+      margin: 0;
+    }
+
+    .ubo-list,
+    .document-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .ubo-card,
+    .document-row {
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      background: #fff;
+      padding: 12px;
+    }
+
+    .ubo-grid,
+    .document-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .ubo-grid .field,
+    .document-grid .field { margin-bottom: 0; }
+    .field--full { grid-column: 1 / -1; }
+
+    .ubo-actions,
+    .document-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .document-url {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      max-width: 100%;
+      font-size: 12px;
+      color: var(--gray-600);
+    }
+
+    .document-url span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: inline-block;
+      max-width: 360px;
+    }
+
+    .dropzone {
+      position: relative;
+      border: 1.5px dashed var(--gray-300);
+      border-radius: var(--radius-md);
+      background: var(--gray-50);
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--duration) var(--ease);
+    }
+
+    .dropzone:hover {
+      border-color: var(--accent);
+      background: var(--accent-bg);
+    }
+
+    .dropzone.drag-over {
+      border-color: var(--accent);
+      border-style: solid;
+      background: var(--accent-bg);
+      box-shadow: 0 0 0 3px rgba(202,138,4,.1);
+    }
+
+    .dropzone.has-file {
+      border-style: solid;
+      border-color: var(--gray-200);
+      background: #fff;
+      padding: 12px 14px;
+      text-align: left;
+      cursor: default;
+    }
+
+    .dropzone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    .dropzone.has-file input[type="file"] { display: none; }
+    .dropzone-prompt { pointer-events: none; }
+
+    .dropzone-icon {
+      width: 32px;
+      height: 32px;
+      color: var(--gray-400);
+      margin: 0 auto 8px;
+      display: block;
+    }
+
+    .dropzone-text {
+      font-size: 13px;
+      color: var(--gray-500);
+      margin: 0 0 4px;
+    }
+
+    .dropzone-link {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .dropzone-formats {
+      font-size: 11px;
+      color: var(--gray-400);
+      margin: 0;
+    }
+
+    .dropzone-preview { display: none; }
+    .dropzone.has-file .dropzone-prompt { display: none; }
+    .dropzone.has-file .dropzone-preview { display: flex; }
+
+    .file-chip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .file-chip-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      background: var(--accent-bg);
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .file-chip-icon svg { width: 18px; height: 18px; }
+    .file-chip-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+
+    .file-chip-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-900);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .file-chip-size { font-size: 11px; color: var(--gray-400); }
+
+    .file-chip-remove {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      border: none;
+      background: transparent;
+      color: var(--gray-400);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 150ms var(--ease);
+      position: relative;
+      z-index: 3;
+    }
+
+    .file-chip-remove:hover { background: var(--red-bg); color: var(--red); }
+    .file-chip-remove svg { width: 14px; height: 14px; }
+
+    .footer {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: flex-start;
+      border-top: 1px solid var(--gray-200);
+      margin-top: 28px;
+      padding-top: 20px;
+    }
+
+    .submit-btn {
+      background: var(--accent);
+      min-width: 220px;
+    }
+
+    .submit-btn:hover:not(:disabled) { background: var(--accent-hover); }
+
+    .submit-btn .spinner {
+      display: none;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+    }
+
+    .submit-btn.loading .spinner { display: block; }
+    .submit-btn.loading .btn-label { visibility: hidden; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .legal-note {
+      font-size: 11px;
+      color: var(--gray-400);
+      max-width: 56ch;
+      line-height: 1.55;
+    }
+
+    .documents-toolbar {
+      margin: 22px 0 0;
+      padding: 18px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--gray-200);
+      background: var(--gray-50);
+    }
+
+    .rail {
+      position: sticky;
+      top: 80px;
+      background: #fff;
+      border-radius: var(--radius-lg);
+      padding: 22px 20px 18px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .rail-title { font-size: 13px; font-weight: 600; color: var(--gray-900); margin-bottom: 2px; }
+    .rail-progress-text { font-size: 12px; color: var(--gray-400); margin: 0 0 14px; }
+    .rail-progress-text span { font-weight: 600; color: var(--gray-600); }
+
+    .rail-bar-track {
+      width: 100%;
+      height: 4px;
+      border-radius: 999px;
+      background: var(--gray-100);
+      margin-bottom: 18px;
+      overflow: hidden;
+    }
+
+    .rail-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--accent);
+      transition: width 400ms var(--ease);
+      width: 0%;
+    }
+
+    .rail-checklist {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .rail-checklist li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      color: var(--gray-500);
+      cursor: pointer;
+      transition: background 150ms var(--ease);
+    }
+
+    .rail-checklist li:hover { background: var(--gray-50); }
+    .rail-checklist li.active { background: var(--accent-bg); color: var(--accent); font-weight: 500; }
+    .rail-checklist li.done { color: var(--green); }
+
+    .rail-check {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      border: 1.5px solid var(--gray-300);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all var(--duration) var(--ease);
+    }
+
+    .rail-check svg { width: 9px; height: 9px; opacity: 0; transition: opacity var(--duration) var(--ease); }
+    .rail-checklist li.done .rail-check { background: var(--green); border-color: var(--green); color: #fff; }
+    .rail-checklist li.done .rail-check svg { opacity: 1; }
+    .rail-checklist li.active .rail-check { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(202,138,4,.1); }
+
+    .rail-divider { height: 1px; background: var(--gray-100); margin: 0 -2px 14px; }
+    .rail-help-title { font-size: 12px; font-weight: 500; color: var(--gray-700); margin-bottom: 4px; }
+    .rail-help-copy { font-size: 11px; color: var(--gray-400); margin: 0 0 10px; line-height: 1.55; }
+
+    .toast-container {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+    }
+
+    .toast {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      background: #fff;
+      box-shadow: var(--shadow-lg);
+      font-size: 13px;
+      color: var(--gray-900);
+      pointer-events: auto;
+      animation: toastIn 300ms var(--ease);
+      max-width: 380px;
+    }
+
+    .toast.removing { animation: toastOut 250ms var(--ease) forwards; }
+    .toast-icon { width: 20px; height: 20px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .toast-icon svg { width: 12px; height: 12px; }
+    .toast--success .toast-icon { background: var(--green-bg); color: var(--green); }
+    .toast--error .toast-icon { background: var(--red-bg); color: var(--red); }
+
+    .toast-dismiss {
+      background: none;
+      border: none;
+      color: var(--gray-400);
+      cursor: pointer;
+      padding: 2px;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+
+    .toast-dismiss:hover { color: var(--gray-600); }
+    .toast-dismiss svg { width: 14px; height: 14px; }
+
+    @keyframes toastIn  { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes toastOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(40px); } }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.4);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 300ms var(--ease);
+    }
+
+    .modal-overlay.show { display: flex; }
+
+    .modal {
+      background: #fff;
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      max-width: 460px;
+      width: 90%;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+      animation: slideUp 300ms var(--ease);
+    }
+
+    .modal-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 999px;
+      background: var(--green-bg);
+      color: var(--green);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+
+    .modal-icon svg { width: 28px; height: 28px; }
+    .modal-title { font-size: 22px; font-weight: 600; color: var(--gray-900); margin: 0 0 12px; }
+    .modal-message { font-size: 14px; color: var(--gray-500); line-height: 1.6; margin: 0 0 20px; }
+    .modal-reference { font-size: 14px; font-weight: 600; color: var(--gray-900); margin: 0 0 14px; }
+    .modal-countdown { font-size: 28px; font-weight: 600; color: var(--accent); margin: 0; }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 840px) {
+      .layout { padding: 20px 16px 32px; }
+      .layout-inner { grid-template-columns: 1fr; }
+      .rail { position: static; order: -1; }
+      .card { padding: 24px 18px; }
+      .reference-banner { grid-template-columns: 1fr; }
+      .reference-actions, .inline-form { justify-content: flex-start; }
+    }
+
+    @media (max-width: 680px) {
+      .two-col, .ubo-grid { grid-template-columns: 1fr; }
+      .inline-form .text-input { width: 100%; }
+      .document-url span { max-width: 220px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="toast-container" class="toast-container"></div>
+
+  <div class="shell">
+    <header class="top-bar">
+      <a class="brand" href="/">
+        <span>Vaulta Digital Assets</span>
+      </a>
+      <span class="env-badge">Onboarding v2</span>
+    </header>
+
+    <main class="layout">
+      <div class="layout-inner">
+        <div class="card">
+          <div class="eyebrow">COMPLIANCE DOCUMENTATION</div>
+          <h1 class="heading">Welcome to Vaulta Onboarding</h1>
+          <p class="intro">
+            Welcome to Vaulta Onboarding You are onboarding to Vaulta’s institutional settlement infrastructure, enabling seamless movement between fiat and digital asset networks. This process ensures compliance with global AML/CFT standards and allows us to activate your account securely.
+          </p>
+          <p class="required-note">
+            <strong>Note:</strong> Fields marked <span class="required">*</span> are required. Files are uploaded to Firebase first, then saved to onboarding.
+          </p>
+
+          <section class="reference-banner" aria-label="Resume onboarding">
+            <div>
+              <p class="reference-title">Resume with your KYC ID</p>
+              <p class="reference-copy">Use your existing reference to reload a saved draft or keep working through later stages.</p>
+              <div id="reference-display" class="reference-code">KYC ID not generated yet</div>
+            </div>
+            <div class="reference-actions">
+              <form id="resume-form" class="inline-form">
+                <input type="text" id="resume-reference-id" class="text-input" placeholder="Enter KYC ID">
+                <button type="submit" class="secondary-btn">Resume</button>
+                <button type="button" id="copy-reference-btn" class="ghost-btn">Copy ID</button>
+              </form>
+            </div>
+          </section>
+
+          <form id="onboarding-form" method="post" enctype="multipart/form-data">
+            <p class="section-subcopy">Save your company details first. The backend generates your KYC ID here if you do not already have one.</p>
+
+            <div class="field" style="margin-bottom: 12px;">
+              <label for="full-name">Full name<span class="required">*</span></label>
+              <input type="text" id="full-name" name="full_name" required placeholder="Your full name" class="text-input">
+            </div>
+
+            <div class="field" style="margin-bottom: 12px;">
+              <label for="company-name">Company name<span class="required">*</span></label>
+              <input type="text" id="company-name" name="company_name" required placeholder="Your company name" class="text-input">
+            </div>
+
+            <div class="field" style="margin-bottom: 12px;">
+              <label for="email">Email address<span class="required">*</span></label>
+              <input type="email" id="email" name="email" required placeholder="you@company.com" class="text-input">
+            </div>
+
+            <div class="field" style="margin-bottom: 20px;">
+              <label for="phone">Phone number<span class="required">*</span></label>
+              <div class="phone-input-wrap">
+                <select id="country-code" class="country-code-select" aria-label="Country code">
+                  <option value="+1">+1</option>
+                  <option value="+44">+44</option>
+                  <option value="+233" selected>+233</option>
+                  <option value="+234">+234</option>
+                  <option value="+254">+254</option>
+                  <option value="+27">+27</option>
+                  <option value="+255">+255</option>
+                  <option value="+256">+256</option>
+                  <option value="+251">+251</option>
+                  <option value="+212">+212</option>
+                  <option value="+20">+20</option>
+                  <option value="+49">+49</option>
+                  <option value="+33">+33</option>
+                  <option value="+971">+971</option>
+                  <option value="+65">+65</option>
+                </select>
+                <input type="tel" id="phone" name="phone" required placeholder="000 000 0000" class="text-input">
+              </div>
+            </div>
+
+            <div class="save-row" style="margin-bottom: 22px;">
+              <span id="basic-info-status" class="status-chip pending">Not saved yet</span>
+              <button type="button" id="save-basic-info-btn" class="primary-btn">Save basic info</button>
+            </div>
+
+            <div class="sections">
+              <div class="accordion-item" data-section="0">
+                <div class="accordion-header">
+                  <div class="accordion-header-left">
+                    <span class="section-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>
+                    <div class="accordion-header-text">
+                      <div class="accordion-title">Certificate of Incorporation &amp; Constitutional Documents</div>
+                      <div class="accordion-subtitle">Certificate of incorporation &amp; articles of association</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-body">
+                  <div class="field">
+                    <label for="certificate_of_incorporation">Certificate of Incorporation<span class="required">*</span></label>
+                    <div class="dropzone" data-doc-key="certificate_of_incorporation" data-required="true">
+                      <input type="file" id="certificate_of_incorporation" name="certificate_of_incorporation" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg">
+                      <div class="dropzone-prompt">
+                        <svg class="dropzone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 16V6m0 0l-3 3m3-3l3 3"/><path d="M20 16.7A4.5 4.5 0 0017.5 8a7 7 0 00-13.16 1.03A4.5 4.5 0 006.5 18h11a4.5 4.5 0 001.5-1.3z"/></svg>
+                        <p class="dropzone-text"><span class="dropzone-link">Upload document</span></p>
+                        <p class="dropzone-formats">PDF, DOCX, PNG, JPG - MAX 10MB</p>
+                      </div>
+                      <div class="dropzone-preview">
+                        <div class="file-chip">
+                          <span class="file-chip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><path d="M14 2v6h6"/></svg></span>
+                          <div class="file-chip-info"><span class="file-chip-name"></span><span class="file-chip-size"></span></div>
+                          <button type="button" class="file-chip-remove" aria-label="Remove file"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+                        </div>
+                      </div>
+                    </div>
+                    <p class="hint">Issued by the Registrar of Companies or equivalent authority.</p>
+                  </div>
+                  <div class="field">
+                    <label for="memorandum_and_articles">Memorandum &amp; Articles of Association<span class="required">*</span></label>
+                    <div class="dropzone" data-doc-key="memorandum_and_articles" data-required="true">
+                      <input type="file" id="memorandum_and_articles" name="memorandum_and_articles" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg">
+                      <div class="dropzone-prompt">
+                        <svg class="dropzone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 16V6m0 0l-3 3m3-3l3 3"/><path d="M20 16.7A4.5 4.5 0 0017.5 8a7 7 0 00-13.16 1.03A4.5 4.5 0 006.5 18h11a4.5 4.5 0 001.5-1.3z"/></svg>
+                        <p class="dropzone-text"><span class="dropzone-link">Upload document</span></p>
+                        <p class="dropzone-formats">PDF, DOCX, PNG, JPG - MAX 10MB</p>
+                      </div>
+                      <div class="dropzone-preview">
+                        <div class="file-chip">
+                          <span class="file-chip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><path d="M14 2v6h6"/></svg></span>
+                          <div class="file-chip-info"><span class="file-chip-name"></span><span class="file-chip-size"></span></div>
+                          <button type="button" class="file-chip-remove" aria-label="Remove file"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+                        </div>
+                      </div>
+                    </div>
+                    <p class="hint">Full, signed copy of your current articles.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion-item" data-section="1">
+                <div class="accordion-header">
+                  <div class="accordion-header-left">
+                    <span class="section-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>
+                    <div class="accordion-header-text">
+                      <div class="accordion-title">Ultimate Beneficial Ownership (UBO) Details</div>
+                      <div class="accordion-subtitle">Schedule of UBOs with ownership details</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-body">
+                  <p class="section-subcopy">Add each UBO with name, email, phone, and ownership percentage, then complete Persona verification.</p>
+                  <div class="ubo-section-tools">
+                    <p id="ubo-helper" class="ubo-helper">No UBO added yet.</p>
+                    <button type="button" id="add-ubo-btn" class="persona-btn">+ Add UBO</button>
+                  </div>
+                  <div id="ubo-list" class="ubo-list"></div>
+                </div>
+              </div>
+
+              <div class="accordion-item" data-section="2">
+                <div class="accordion-header">
+                  <div class="accordion-header-left">
+                    <span class="section-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>
+                    <div class="accordion-header-text">
+                      <div class="accordion-title">Company Overview &amp; Organisational Structure</div>
+                      <div class="accordion-subtitle">Management team and organisational structure</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-body">
+                  <div class="field">
+                    <label for="company_profile">Certified company profile<span class="required">*</span></label>
+                    <div class="dropzone" data-doc-key="company_profile" data-required="true">
+                      <input type="file" id="company_profile" name="company_profile" accept=".pdf,.doc,.docx,.ppt,.pptx">
+                      <div class="dropzone-prompt">
+                        <svg class="dropzone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 16V6m0 0l-3 3m3-3l3 3"/><path d="M20 16.7A4.5 4.5 0 0017.5 8a7 7 0 00-13.16 1.03A4.5 4.5 0 006.5 18h11a4.5 4.5 0 001.5-1.3z"/></svg>
+                        <p class="dropzone-text"><span class="dropzone-link">Upload document</span></p>
+                        <p class="dropzone-formats">PDF, DOCX, PPTX</p>
+                      </div>
+                      <div class="dropzone-preview">
+                        <div class="file-chip">
+                          <span class="file-chip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><path d="M14 2v6h6"/></svg></span>
+                          <div class="file-chip-info"><span class="file-chip-name"></span><span class="file-chip-size"></span></div>
+                          <button type="button" class="file-chip-remove" aria-label="Remove file"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+                        </div>
+                      </div>
+                    </div>
+                    <p class="hint">Include key management biographies and organisation chart.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion-item" data-section="3">
+                <div class="accordion-header">
+                  <div class="accordion-header-left">
+                    <span class="section-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>
+                    <div class="accordion-header-text">
+                      <div class="accordion-title">Director &amp; Shareholder Identification</div>
+                      <div class="accordion-subtitle">Passports and proof of residential address</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-body">
+                  <p class="section-subcopy">Certified copies of valid passports and proof of address for key directors and shareholders.</p>
+                  <div class="field">
+                    <label for="id_documents">Certified ID documents<span class="required">*</span></label>
+                    <div class="dropzone" data-doc-key="id_documents" data-required="true">
+                      <input type="file" id="id_documents" name="id_documents" accept=".pdf,.jpg,.jpeg,.png,.zip">
+                      <div class="dropzone-prompt">
+                        <svg class="dropzone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 16V6m0 0l-3 3m3-3l3 3"/><path d="M20 16.7A4.5 4.5 0 0017.5 8a7 7 0 00-13.16 1.03A4.5 4.5 0 006.5 18h11a4.5 4.5 0 001.5-1.3z"/></svg>
+                        <p class="dropzone-text"><span class="dropzone-link">Upload document</span></p>
+                        <p class="dropzone-formats">PDF, JPG, PNG, ZIP</p>
+                      </div>
+                      <div class="dropzone-preview">
+                        <div class="file-chip">
+                          <span class="file-chip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><path d="M14 2v6h6"/></svg></span>
+                          <div class="file-chip-info"><span class="file-chip-name"></span><span class="file-chip-size"></span></div>
+                          <button type="button" class="file-chip-remove" aria-label="Remove file"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+                        </div>
+                      </div>
+                    </div>
+                    <p class="hint">Bundle multiple IDs into a single PDF or ZIP if needed.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion-item" data-section="4">
+                <div class="accordion-header">
+                  <div class="accordion-header-left">
+                    <span class="section-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>
+                    <div class="accordion-header-text">
+                      <div class="accordion-title">Registered Address Verification</div>
+                      <div class="accordion-subtitle">Recent utility bill or similar document</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-body">
+                  <div class="field">
+                    <label for="company_address_proof">Company Proof Of Address<span class="required">*</span></label>
+                    <div class="dropzone" data-doc-key="company_address_proof" data-required="true">
+                      <input type="file" id="company_address_proof" name="company_address_proof" accept=".pdf,.jpg,.jpeg,.png">
+                      <div class="dropzone-prompt">
+                        <svg class="dropzone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 16V6m0 0l-3 3m3-3l3 3"/><path d="M20 16.7A4.5 4.5 0 0017.5 8a7 7 0 00-13.16 1.03A4.5 4.5 0 006.5 18h11a4.5 4.5 0 001.5-1.3z"/></svg>
+                        <p class="dropzone-text"><span class="dropzone-link">Upload document</span></p>
+                        <p class="dropzone-formats">PDF, JPG, PNG</p>
+                      </div>
+                      <div class="dropzone-preview">
+                        <div class="file-chip">
+                          <span class="file-chip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><path d="M14 2v6h6"/></svg></span>
+                          <div class="file-chip-info"><span class="file-chip-name"></span><span class="file-chip-size"></span></div>
+                          <button type="button" class="file-chip-remove" aria-label="Remove file"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+                        </div>
+                      </div>
+                    </div>
+                    <p class="hint">Must clearly show company name and registered address, dated within the last 6 months or statement of good standing.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion-item" data-section="5">
+                <div class="accordion-header">
+                  <div class="accordion-header-left">
+                    <span class="section-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>
+                    <div class="accordion-header-text">
+                      <div class="accordion-title">Regulatory Status &amp; Licensing Information</div>
+                      <div class="accordion-subtitle">Operating licence or Letter Of No Objection (if applicable)</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-body">
+                  <p class="section-subcopy">If regulated, provide a copy of your operating licence or letter of no objection.</p>
+                  <div class="field">
+                    <label for="regulatory_information">Regulatory licence / Letter Of No Objection</label>
+                    <div class="dropzone" data-doc-key="regulatory_information">
+                      <input type="file" id="regulatory_information" name="regulatory_information" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                      <div class="dropzone-prompt">
+                        <svg class="dropzone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 16V6m0 0l-3 3m3-3l3 3"/><path d="M20 16.7A4.5 4.5 0 0017.5 8a7 7 0 00-13.16 1.03A4.5 4.5 0 006.5 18h11a4.5 4.5 0 001.5-1.3z"/></svg>
+                        <p class="dropzone-text"><span class="dropzone-link">Upload document</span></p>
+                        <p class="dropzone-formats">PDF, DOCX, JPG</p>
+                      </div>
+                      <div class="dropzone-preview">
+                        <div class="file-chip">
+                          <span class="file-chip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><path d="M14 2v6h6"/></svg></span>
+                          <div class="file-chip-info"><span class="file-chip-name"></span><span class="file-chip-size"></span></div>
+                          <button type="button" class="file-chip-remove" aria-label="Remove file"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+                        </div>
+                      </div>
+                    </div>
+                    <p class="hint">Optional, only where a regulatory licence or Letter Of No Objection applies.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion-item" data-section="6">
+                <div class="accordion-header">
+                  <div class="accordion-header-left">
+                    <span class="section-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>
+                    <div class="accordion-header-text">
+                      <div class="accordion-title">Source of Funds &amp; Financial Standing</div>
+                      <div class="accordion-subtitle">Bank statements or statement of good standing</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-body">
+                  <p class="section-subcopy">Latest 3 months' bank statements or a statement of good standing (not older than 6 months).</p>
+                  <div class="field">
+                    <label for="source_of_funds">Source of funds documentation<span class="required">*</span></label>
+                    <div class="dropzone" data-doc-key="source_of_funds" data-required="true">
+                      <input type="file" id="source_of_funds" name="source_of_funds" accept=".pdf,.csv,.zip">
+                      <div class="dropzone-prompt">
+                        <svg class="dropzone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 16V6m0 0l-3 3m3-3l3 3"/><path d="M20 16.7A4.5 4.5 0 0017.5 8a7 7 0 00-13.16 1.03A4.5 4.5 0 006.5 18h11a4.5 4.5 0 001.5-1.3z"/></svg>
+                        <p class="dropzone-text"><span class="dropzone-link">Upload document</span></p>
+                        <p class="dropzone-formats">PDF, CSV, ZIP</p>
+                      </div>
+                      <div class="dropzone-preview">
+                        <div class="file-chip">
+                          <span class="file-chip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><path d="M14 2v6h6"/></svg></span>
+                          <div class="file-chip-info"><span class="file-chip-name"></span><span class="file-chip-size"></span></div>
+                          <button type="button" class="file-chip-remove" aria-label="Remove file"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+                        </div>
+                      </div>
+                    </div>
+                    <p class="hint">Combine multiple statements into a single PDF or ZIP.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="documents-toolbar">
+              <p class="section-subcopy" style="margin-top: 0;">Documents are auto-saved after upload. Use this button to retry any document URL saves that failed.</p>
+              <div class="save-row" style="margin-bottom: 0;">
+                <div>
+                  <p id="document-helper" class="document-helper">No saved document URLs yet.</p>
+                  <span id="documents-status" class="status-chip pending">Not saved yet</span>
+                </div>
+                <button type="button" id="save-documents-btn" class="primary-btn">Retry document saves</button>
+              </div>
+            </div>
+
+            <div class="persona-divider"><span class="persona-divider-text">Identity verification</span></div>
+
+            <div class="persona-card" id="persona-section" data-section="7">
+              <span class="persona-icon-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+              </span>
+              <div class="persona-content">
+                <p class="persona-title">Verify your identity</p>
+                <p class="persona-description">
+                  Complete a quick identity check powered by Persona.
+                  Have a valid government-issued ID ready; the process takes about 2 minutes.
+                </p>
+                <button type="button" id="persona-verify-btn" class="persona-btn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  Start verification
+                </button>
+                <div id="persona-status" class="persona-status">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+                  <span id="persona-status-text"></span>
+                </div>
+                <input type="hidden" id="persona_inquiry_id" name="persona_inquiry_id" value="">
+              </div>
+            </div>
+
+            <div class="footer">
+              <button type="submit" class="submit-btn" id="submit-btn">
+                <span class="btn-label">Submit onboarding</span>
+                <span class="spinner"></span>
+              </button>
+              <p class="legal-note">
+                By submitting you confirm the information provided is accurate, complete, and up to date.
+                Your reference ID will also be included in the final confirmation email.
+              </p>
+            </div>
+          </form>
+        </div>
+
+        <aside class="rail">
+          <div class="rail-title">Compliance Requirements</div>
+          <p class="rail-progress-text"><span id="rail-count">0</span> of <span id="rail-total">8</span> complete</p>
+          <div class="rail-bar-track"><div class="rail-bar-fill" id="rail-bar"></div></div>
+          <ul class="rail-checklist" id="rail-checklist">
+            <li class="active" data-rail="0"><span class="rail-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Certificate of Incorporation &amp; Constitutional Documents</li>
+            <li data-rail="1"><span class="rail-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Ultimate Beneficial Ownership (UBO) Details</li>
+            <li data-rail="2"><span class="rail-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Company Overview &amp; Organisational Structure</li>
+            <li data-rail="3"><span class="rail-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Director &amp; Shareholder Identification</li>
+            <li data-rail="4"><span class="rail-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Registered Address Verification</li>
+            <li data-rail="5"><span class="rail-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Regulatory Status &amp; Licensing Information</li>
+            <li data-rail="6"><span class="rail-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Source of Funds &amp; Financial Standing</li>
+            <li data-rail="7"><span class="rail-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Identity Verification</li>
+          </ul>
+          <div class="rail-divider"></div>
+          <div class="rail-help-title">Need assistance?</div>
+          <p class="rail-help-copy">Use your KYC ID to resume later, or contact the Vaulta team if a save or verification step fails.</p>
+          <button type="button" class="rail-button" onclick="window.open('mailto:support@vaulta.digital')">Contact support</button>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+  <script src="https://cdn.withpersona.com/dist/persona-v5.0.0.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    var API_BASE = 'https://backend.vaulta.digital';
+    var TOTAL_STAGES = 8;
+    var REQUIRED_DOCUMENT_KEYS = [
+      'certificate_of_incorporation',
+      'memorandum_and_articles',
+      'company_profile',
+      'id_documents',
+      'company_address_proof',
+      'source_of_funds'
+    ];
+    var firebaseReady = false;
+    var storageRef = null;
+    var accItems = Array.from(document.querySelectorAll('.accordion-item[data-section]'));
+    var toastBox = document.getElementById('toast-container');
+
+    var state = {
+      referenceId: '',
+      firebaseConfig: null,
+      basicInfoSaved: false,
+      ubosComplete: false,
+      documentsSaved: false,
+      personaDone: false,
+      personaTemplateId: null,
+      personaEnvironment: null,
+      personaInquiryId: '',
+      documents: {},
+      pendingDocuments: {},
+      uboRecords: []
+    };
+
+    function formatBytes(bytes) {
+      if (bytes === 0) return '0 B';
+      var k = 1024;
+      var sizes = ['B', 'KB', 'MB'];
+      var i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+    }
+
+    function escapeHtml(value) {
+      return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function normalizePhone(countryCode, phone) {
+      var cleaned = (phone || '').trim().replace(/\s+/g, '');
+      if (!cleaned) return '';
+      if (cleaned.charAt(0) === '+') return cleaned;
+      return countryCode + cleaned.replace(/^0+/, '');
+    }
+
+    function setStatusChip(element, kind, text) {
+      element.className = 'status-chip ' + kind;
+      element.textContent = text;
+    }
+
+    function showToast(msg, type) {
+      type = type || 'success';
+      var t = document.createElement('div');
+      t.className = 'toast toast--' + type;
+      t.innerHTML =
+        '<span class="toast-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' +
+        (type === 'success' ? '<path d="M20 6L9 17l-5-5"/>' : '<path d="M18 6L6 18M6 6l12 12"/>') +
+        '</svg></span><span>' + escapeHtml(msg) + '</span>' +
+        '<button class="toast-dismiss" aria-label="Dismiss"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>';
+      toastBox.appendChild(t);
+      var dismiss = function () {
+        t.classList.add('removing');
+        setTimeout(function () { t.remove(); }, 260);
+      };
+      t.querySelector('.toast-dismiss').addEventListener('click', dismiss);
+      setTimeout(dismiss, 4500);
+    }
+
+    function getQueryReferenceId() {
+      var params = new URLSearchParams(window.location.search);
+      return params.get('reference_id') || params.get('ref') || '';
+    }
+
+    function updateUrlReference(referenceId) {
+      if (!referenceId) return;
+      var url = new URL(window.location.href);
+      url.searchParams.set('reference_id', referenceId);
+      window.history.replaceState({}, '', url.toString());
+    }
+
+    function setReferenceId(referenceId) {
+      state.referenceId = referenceId || '';
+      document.getElementById('reference-display').textContent = state.referenceId || 'KYC ID not generated yet';
+      document.getElementById('resume-reference-id').value = state.referenceId || '';
+      if (state.referenceId) updateUrlReference(state.referenceId);
+    }
+
+    function updateProgress() {
+      var sectionDone = {
+        0: !!(state.documents.certificate_of_incorporation && state.documents.memorandum_and_articles),
+        1: state.ubosComplete,
+        2: !!state.documents.company_profile,
+        3: !!state.documents.id_documents,
+        4: !!state.documents.company_address_proof,
+        5: state.documentsSaved || !!state.documents.regulatory_information,
+        6: !!state.documents.source_of_funds,
+        7: state.personaDone
+      };
+      var done = Object.keys(sectionDone).reduce(function (count, key) {
+        return count + (sectionDone[key] ? 1 : 0);
+      }, 0);
+
+      accItems.forEach(function (item) {
+        var index = parseInt(item.dataset.section, 10);
+        var completed = !!sectionDone[index];
+        item.classList.toggle('done', completed);
+      });
+
+      document.getElementById('rail-count').textContent = done;
+      document.getElementById('rail-bar').style.width = Math.round((done / TOTAL_STAGES) * 100) + '%';
+
+      document.querySelectorAll('#rail-checklist li').forEach(function (li) {
+        var index = parseInt(li.dataset.rail, 10);
+        li.classList.toggle('done', !!sectionDone[index]);
+      });
+
+      document.getElementById('submit-btn').disabled = !(state.basicInfoSaved && state.ubosComplete && state.documentsSaved);
+    }
+
+    document.querySelectorAll('#rail-checklist li').forEach(function (li) {
+      li.addEventListener('click', function () {
+        var index = parseInt(li.dataset.rail, 10);
+        if (index < 7) {
+          var target = document.querySelector('.accordion-item[data-section="' + index + '"]');
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        } else {
+          document.getElementById('persona-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        document.querySelectorAll('#rail-checklist li').forEach(function (entry) { entry.classList.remove('active'); });
+        li.classList.add('active');
+      });
+    });
+
+    function parsePayload(data) {
+      if (!data || typeof data !== 'object') return {};
+      return data.data && typeof data.data === 'object' ? data.data : data;
+    }
+
+    function applyBasicInfo(payload) {
+      if (payload.full_name) document.getElementById('full-name').value = payload.full_name;
+      if (payload.company_name) document.getElementById('company-name').value = payload.company_name;
+      if (payload.email) document.getElementById('email').value = payload.email;
+      if (payload.phone) {
+        var fullPhone = String(payload.phone);
+        var countryCodeSelect = document.getElementById('country-code');
+        var match = Array.from(countryCodeSelect.options).find(function (option) {
+          return fullPhone.indexOf(option.value) === 0;
+        });
+        if (match) {
+          countryCodeSelect.value = match.value;
+          document.getElementById('phone').value = fullPhone.slice(match.value.length);
+        } else {
+          document.getElementById('phone').value = fullPhone;
+        }
+      }
+    }
+
+    function syncPersonaState(payload) {
+      var personaBlock = payload.persona || payload.identity_verification || {};
+      state.personaTemplateId = payload.persona_template_id || personaBlock.template_id || personaBlock.persona_template_id || state.personaTemplateId;
+      state.personaEnvironment = payload.persona_environment || personaBlock.environment || personaBlock.persona_environment || state.personaEnvironment;
+      state.personaInquiryId = payload.persona_inquiry_id || personaBlock.inquiry_id || state.personaInquiryId || '';
+      document.getElementById('persona_inquiry_id').value = state.personaInquiryId;
+
+      var isVerified = payload.persona_verified === true || personaBlock.verified === true || personaBlock.status === 'completed';
+      var btn = document.getElementById('persona-verify-btn');
+      var statusEl = document.getElementById('persona-status');
+      var statusText = document.getElementById('persona-status-text');
+
+      if (isVerified) {
+        state.personaDone = true;
+        statusEl.className = 'persona-status status-completed';
+        statusText.textContent = 'Identity verified successfully.';
+        btn.style.display = 'none';
+      } else if (state.personaTemplateId && state.personaEnvironment && state.referenceId) {
+        state.personaDone = false;
+        btn.disabled = false;
+        btn.style.display = 'inline-flex';
+        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Start verification';
+        if (statusText.textContent === '') {
+          statusEl.className = 'persona-status status-completed';
+          statusText.textContent = 'Identity verification is available when you are ready.';
+        }
+      } else {
+        state.personaDone = true;
+        statusEl.className = 'persona-status status-completed';
+        statusText.textContent = 'Identity verification may be required depending on your onboarding profile.';
+        btn.style.display = 'none';
+      }
+    }
+
+    function updateBasicInfoState(saved) {
+      state.basicInfoSaved = saved;
+      setStatusChip(document.getElementById('basic-info-status'), saved ? 'success' : 'pending', saved ? 'Saved' : 'Not saved yet');
+      updateProgress();
+    }
+
+    function areDocumentsSynced() {
+      var keys = {};
+      Object.keys(state.documents).forEach(function (key) { keys[key] = true; });
+      Object.keys(state.pendingDocuments).forEach(function (key) { keys[key] = true; });
+      return Object.keys(keys).every(function (key) {
+        return (state.documents[key] || '') === (state.pendingDocuments[key] || '');
+      });
+    }
+
+    function getUnsyncedDocumentKeys() {
+      var keys = {};
+      Object.keys(state.pendingDocuments).forEach(function (key) { keys[key] = true; });
+      return Object.keys(keys).filter(function (key) {
+        var pending = state.pendingDocuments[key] || '';
+        var saved = state.documents[key] || '';
+        return !!pending && pending !== saved;
+      });
+    }
+
+    async function persistSingleDocument(field, url) {
+      var response = await fetch(API_BASE + '/api/v2/onboarding/documents', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          reference_id: state.referenceId,
+          field: field,
+          url: url
+        })
+      });
+      var data = await response.json();
+      var payload = parsePayload(data);
+      if (!response.ok) {
+        throw new Error(payload.detail || 'Could not save document URL.');
+      }
+      return payload;
+    }
+
+    function updateDocumentState() {
+      var readyCount = REQUIRED_DOCUMENT_KEYS.filter(function (key) { return !!state.pendingDocuments[key]; }).length;
+      var requiredSaved = REQUIRED_DOCUMENT_KEYS.every(function (key) { return !!state.documents[key]; });
+      var synced = areDocumentsSynced();
+      state.documentsSaved = requiredSaved && synced;
+
+      if (state.documentsSaved) {
+        document.getElementById('document-helper').textContent = 'All required document URLs are saved.';
+        setStatusChip(document.getElementById('documents-status'), 'success', 'Saved');
+      } else if (readyCount === REQUIRED_DOCUMENT_KEYS.length) {
+        document.getElementById('document-helper').textContent = 'All required files are uploaded. Some URL saves are still pending.';
+        setStatusChip(document.getElementById('documents-status'), 'info', 'Uploaded, not saved');
+      } else {
+        document.getElementById('document-helper').textContent = readyCount + ' of ' + REQUIRED_DOCUMENT_KEYS.length + ' required document groups ready.';
+        setStatusChip(document.getElementById('documents-status'), 'pending', 'Not saved yet');
+      }
+
+      updateProgress();
+    }
+
+    function refreshUboCompletionState() {
+      var cards = Array.from(document.querySelectorAll('.ubo-card'));
+      var verified = cards.filter(function (card) { return card.dataset.verified === 'true'; }).length;
+      state.ubosComplete = cards.length > 0 && verified === cards.length;
+      document.getElementById('ubo-helper').textContent = cards.length ? verified + ' of ' + cards.length + ' UBO(s) verified.' : 'No UBO added yet.';
+      updateProgress();
+    }
+
+    async function ensureFirebaseReady() {
+      if (firebaseReady) return;
+      var response = await fetch(API_BASE + '/api/v2/onboarding/firebase-config');
+      var data = await response.json();
+      var payload = parsePayload(data);
+      if (!response.ok) {
+        throw new Error(payload.detail || 'Failed to load Firebase config.');
+      }
+
+      state.firebaseConfig = {
+        apiKey: payload.apiKey || payload.api_key,
+        authDomain: payload.authDomain || payload.auth_domain,
+        projectId: payload.projectId || payload.project_id,
+        storageBucket: payload.storageBucket || payload.storage_bucket,
+        messagingSenderId: payload.messagingSenderId || payload.messaging_sender_id,
+        appId: payload.appId || payload.app_id,
+        measurementId: payload.measurementId || payload.measurement_id
+      };
+
+      if (!firebase.apps.length) {
+        firebase.initializeApp(state.firebaseConfig);
+      }
+
+      storageRef = firebase.storage();
+      firebaseReady = true;
+    }
+
+    async function uploadToFirebase(file, storagePath) {
+      await ensureFirebaseReady();
+      var ref = storageRef.ref(storagePath);
+      await ref.put(file);
+      return await ref.getDownloadURL();
+    }
+
+    function makeStoragePath(documentKey, fileName) {
+      var safeKey = (documentKey || 'document').toLowerCase().replace(/[^a-z0-9_-]+/g, '_').replace(/^_+|_+$/g, '') || 'document';
+      return 'onboarding-v2/' + state.referenceId + '/' + safeKey + '/' + Date.now() + '_' + fileName;
+    }
+
+    function setDropzonePreview(dropzone, url, fileLabel, metaLabel, saved) {
+      var nameEl = dropzone.querySelector('.file-chip-name');
+      var sizeEl = dropzone.querySelector('.file-chip-size');
+      dropzone.dataset.fileUrl = url;
+      dropzone.dataset.saved = saved ? 'true' : 'false';
+      dropzone.classList.add('has-file');
+      nameEl.textContent = fileLabel;
+      sizeEl.textContent = metaLabel;
+    }
+
+    function clearDropzone(dropzone) {
+      var input = dropzone.querySelector('input[type="file"]');
+      dropzone.classList.remove('has-file');
+      delete dropzone.dataset.fileUrl;
+      dropzone.dataset.saved = 'false';
+      if (input) input.value = '';
+      dropzone.querySelector('.file-chip-name').textContent = '';
+      dropzone.querySelector('.file-chip-size').textContent = '';
+    }
+
+    function attachDocumentDropzones() {
+      document.querySelectorAll('.dropzone[data-doc-key]').forEach(function (dropzone) {
+        var input = dropzone.querySelector('input[type="file"]');
+        var removeBtn = dropzone.querySelector('.file-chip-remove');
+        var docKey = dropzone.dataset.docKey;
+
+        async function handleFile(file) {
+          if (!file) return;
+          if (!state.referenceId) {
+            showToast('Save basic info first to generate or load a KYC ID.', 'error');
+            input.value = '';
+            return;
+          }
+
+          if (file.size > 10 * 1024 * 1024) {
+            showToast('File exceeds 10 MB limit.', 'error');
+            input.value = '';
+            return;
+          }
+
+          setDropzonePreview(dropzone, '', file.name, 'Uploading...', false);
+          delete state.documents[docKey];
+          state.documentsSaved = false;
+          updateProgress();
+
+          try {
+            var url = await uploadToFirebase(file, makeStoragePath(docKey, file.name));
+            state.pendingDocuments[docKey] = url;
+            setDropzonePreview(dropzone, url, file.name, formatBytes(file.size) + ' - Uploaded, saving URL...', false);
+
+            try {
+              await persistSingleDocument(docKey, url);
+              state.documents[docKey] = url;
+              setDropzonePreview(dropzone, url, file.name, formatBytes(file.size) + ' - Saved URL', true);
+              showToast('Uploaded and saved ' + file.name + '.', 'success');
+            } catch (saveErr) {
+              setDropzonePreview(dropzone, url, file.name, formatBytes(file.size) + ' - Uploaded, not saved', false);
+              showToast(saveErr.message || 'Uploaded, but could not save URL.', 'error');
+            }
+          } catch (err) {
+            delete state.pendingDocuments[docKey];
+            clearDropzone(dropzone);
+            showToast(err.message || 'Upload failed.', 'error');
+          }
+
+          updateDocumentState();
+        }
+
+        function removeFile() {
+          delete state.pendingDocuments[docKey];
+          delete state.documents[docKey];
+          clearDropzone(dropzone);
+          updateDocumentState();
+        }
+
+        input.addEventListener('change', function () {
+          if (this.files && this.files[0]) handleFile(this.files[0]);
+        });
+
+        removeBtn.addEventListener('click', function (event) {
+          event.stopPropagation();
+          removeFile();
+        });
+
+        ['dragenter', 'dragover'].forEach(function (eventName) {
+          dropzone.addEventListener(eventName, function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            if (!dropzone.classList.contains('has-file')) dropzone.classList.add('drag-over');
+          });
+        });
+
+        ['dragleave', 'drop'].forEach(function (eventName) {
+          dropzone.addEventListener(eventName, function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            dropzone.classList.remove('drag-over');
+          });
+        });
+
+        dropzone.addEventListener('drop', function (event) {
+          if (dropzone.classList.contains('has-file')) return;
+          var files = event.dataTransfer.files;
+          if (files && files[0]) {
+            var dt = new DataTransfer();
+            dt.items.add(files[0]);
+            input.files = dt.files;
+            handleFile(files[0]);
+          }
+        });
+      });
+    }
+
+    function hydrateDocuments(documents) {
+      state.documents = Object.assign({}, documents || {});
+      state.pendingDocuments = Object.assign({}, documents || {});
+
+      document.querySelectorAll('.dropzone[data-doc-key]').forEach(function (dropzone) {
+        clearDropzone(dropzone);
+        var docKey = dropzone.dataset.docKey;
+        if (state.documents[docKey]) {
+          setDropzonePreview(dropzone, state.documents[docKey], docKey + '.saved', 'Saved URL', true);
+        }
+      });
+
+      updateDocumentState();
+    }
+
+    function addUboCard(initialData) {
+      var card = document.createElement('div');
+      card.className = 'ubo-card';
+      card.dataset.saved = initialData && initialData.ubo_reference_id ? 'true' : 'false';
+      card.dataset.verified = initialData && initialData.verified ? 'true' : 'false';
+      card.dataset.uboReferenceId = initialData && initialData.ubo_reference_id ? initialData.ubo_reference_id : '';
+      card.dataset.personaInquiryId = initialData && initialData.persona_inquiry_id ? initialData.persona_inquiry_id : '';
+      card.innerHTML = '' +
+        '<div class="ubo-grid">' +
+          '<div class="field field--full">' +
+            '<label>Full name<span class="required">*</span></label>' +
+            '<input type="text" class="text-input ubo-name" placeholder="Jane Doe" required value="' + escapeHtml(initialData && initialData.full_name || '') + '">' +
+          '</div>' +
+          '<div class="field">' +
+            '<label>Email<span class="required">*</span></label>' +
+            '<input type="email" class="text-input ubo-email" placeholder="jane@company.com" required value="' + escapeHtml(initialData && initialData.email || '') + '">' +
+          '</div>' +
+          '<div class="field">' +
+            '<label>Phone<span class="required">*</span></label>' +
+            '<div class="phone-input-wrap">' +
+              '<select class="country-code-select ubo-country-code" aria-label="UBO country code">' +
+                '<option value="+233">+233</option>' +
+                '<option value="+1">+1</option>' +
+                '<option value="+44">+44</option>' +
+                '<option value="+234">+234</option>' +
+                '<option value="+27">+27</option>' +
+                '<option value="+254">+254</option>' +
+              '</select>' +
+              '<input type="tel" class="text-input ubo-phone" placeholder="000 000 0000" required value="' + escapeHtml(initialData && initialData.phone_local || '') + '">' +
+            '</div>' +
+          '</div>' +
+          '<div class="field field--full">' +
+            '<label>Ownership percentage (%)<span class="required">*</span></label>' +
+            '<input type="number" class="text-input ubo-ownership" placeholder="25" min="0.01" max="100" step="0.01" required value="' + escapeHtml(initialData && initialData.ownership_percentage || '') + '">' +
+          '</div>' +
+        '</div>' +
+        '<div class="ubo-actions">' +
+          '<div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">' +
+            '<span class="status-chip ubo-status ' + ((initialData && initialData.verified) ? 'success' : (initialData && initialData.ubo_reference_id ? 'info' : 'pending')) + '">' + ((initialData && initialData.verified) ? 'Verified' : (initialData && initialData.ubo_reference_id ? 'Saved, not verified' : 'Not saved')) + '</span>' +
+          '</div>' +
+          '<div style="display:flex; gap:8px; flex-wrap:wrap;">' +
+            '<button type="button" class="secondary-btn ubo-save-btn">Save UBO</button>' +
+            '<button type="button" class="ubo-verify-btn">Verify with Persona</button>' +
+            '<button type="button" class="ghost-btn ubo-remove-btn">Remove</button>' +
+          '</div>' +
+        '</div>';
+
+      document.getElementById('ubo-list').appendChild(card);
+
+      var phoneSelect = card.querySelector('.ubo-country-code');
+      var statusEl = card.querySelector('.ubo-status');
+      if (initialData && initialData.phone) {
+        var fullPhone = String(initialData.phone);
+        var match = Array.from(phoneSelect.options).find(function (option) {
+          return fullPhone.indexOf(option.value) === 0;
+        });
+        if (match) {
+          phoneSelect.value = match.value;
+          card.querySelector('.ubo-phone').value = fullPhone.slice(match.value.length);
+        }
+      }
+
+      function markDirty() {
+        card.dataset.saved = 'false';
+        card.dataset.verified = 'false';
+        card.dataset.personaInquiryId = '';
+        setStatusChip(statusEl, 'pending', 'Not saved');
+        var verifyBtn = card.querySelector('.ubo-verify-btn');
+        verifyBtn.disabled = false;
+        verifyBtn.textContent = 'Verify with Persona';
+        refreshUboCompletionState();
+      }
+
+      Array.from(card.querySelectorAll('input, select')).forEach(function (field) {
+        field.addEventListener('input', markDirty);
+        field.addEventListener('change', markDirty);
+      });
+
+      card.querySelector('.ubo-remove-btn').addEventListener('click', function () {
+        card.remove();
+        refreshUboCompletionState();
+      });
+
+      card.querySelector('.ubo-save-btn').addEventListener('click', async function () {
+        if (!state.referenceId) {
+          showToast('Save basic info first to get a KYC ID.', 'error');
+          return;
+        }
+
+        var name = card.querySelector('.ubo-name').value.trim();
+        var email = card.querySelector('.ubo-email').value.trim();
+        var phone = normalizePhone(phoneSelect.value, card.querySelector('.ubo-phone').value);
+        var ownershipRaw = card.querySelector('.ubo-ownership').value;
+        var ownership = parseFloat(ownershipRaw);
+        var saveBtn = card.querySelector('.ubo-save-btn');
+
+        if (!name || !email || !phone || !ownershipRaw) {
+          showToast('Fill all UBO fields before saving.', 'error');
+          return;
+        }
+
+        if (Number.isNaN(ownership) || ownership <= 0 || ownership > 100) {
+          showToast('Ownership percentage must be greater than 0 and not more than 100.', 'error');
+          return;
+        }
+
+        saveBtn.disabled = true;
+        setStatusChip(statusEl, 'pending', 'Saving');
+
+        try {
+          var response = await fetch(API_BASE + '/api/v2/onboarding/ubo', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              reference_id: state.referenceId,
+              full_name: name,
+              email: email,
+              phone: phone,
+              ownership_percentage: ownership
+            })
+          });
+          var data = await response.json();
+          var payload = parsePayload(data);
+          if (!response.ok) {
+            throw new Error(payload.detail || 'Failed to save UBO.');
+          }
+
+          card.dataset.saved = 'true';
+          card.dataset.verified = payload.verified === true ? 'true' : 'false';
+          card.dataset.uboReferenceId = payload.ubo_reference_id || card.dataset.uboReferenceId || '';
+          card.dataset.personaInquiryId = payload.persona_inquiry_id || card.dataset.personaInquiryId || '';
+          setStatusChip(statusEl, payload.verified === true ? 'success' : 'info', payload.verified === true ? 'Verified' : 'Saved, not verified');
+          showToast('UBO saved successfully.', 'success');
+          refreshUboCompletionState();
+        } catch (err) {
+          setStatusChip(statusEl, 'error', 'Save failed');
+          showToast(err.message || 'Failed to save UBO.', 'error');
+        } finally {
+          saveBtn.disabled = false;
+        }
+      });
+
+      card.querySelector('.ubo-verify-btn').addEventListener('click', async function () {
+        if (!card.dataset.saved || card.dataset.saved !== 'true' || !card.dataset.uboReferenceId) {
+          showToast('Save this UBO before starting verification.', 'error');
+          return;
+        }
+
+        if (!state.personaTemplateId || !state.personaEnvironment) {
+          showToast('Persona is not configured for this onboarding profile yet.', 'error');
+          return;
+        }
+
+        var verifyBtn = card.querySelector('.ubo-verify-btn');
+        verifyBtn.disabled = true;
+        verifyBtn.textContent = 'Verifying...';
+        setStatusChip(statusEl, 'pending', 'Verification in progress');
+
+        try {
+          var inquiryId = await runPersonaUboVerification(card.dataset.uboReferenceId);
+          var response = await fetch(API_BASE + '/api/v2/onboarding/ubo/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              ubo_reference_id: card.dataset.uboReferenceId,
+              inquiry_id: inquiryId
+            })
+          });
+          var data = await response.json();
+          var payload = parsePayload(data);
+          if (!response.ok) {
+            throw new Error(payload.detail || 'Failed to verify UBO.');
+          }
+
+          card.dataset.verified = 'true';
+          card.dataset.personaInquiryId = payload.persona_inquiry_id || inquiryId || '';
+          setStatusChip(statusEl, 'success', 'Verified');
+          verifyBtn.textContent = 'Verified';
+          showToast('UBO verified successfully.', 'success');
+        } catch (err) {
+          setStatusChip(statusEl, 'error', 'Verification failed');
+          verifyBtn.disabled = false;
+          verifyBtn.textContent = 'Verify with Persona';
+          showToast(err.message || 'UBO verification failed.', 'error');
+        }
+
+        refreshUboCompletionState();
+      });
+
+      refreshUboCompletionState();
+      return card;
+    }
+
+    function resetDynamicSections() {
+      document.getElementById('ubo-list').innerHTML = '';
+      state.documents = {};
+      state.pendingDocuments = {};
+      state.uboRecords = [];
+      state.ubosComplete = false;
+      state.documentsSaved = false;
+      document.querySelectorAll('.dropzone[data-doc-key]').forEach(function (dropzone) {
+        clearDropzone(dropzone);
+      });
+      refreshUboCompletionState();
+      updateDocumentState();
+    }
+
+    function hydrateResume(payload) {
+      resetDynamicSections();
+      setReferenceId(payload.reference_id || state.referenceId || '');
+
+      var basicInfo = payload.basic_info || payload;
+      applyBasicInfo(basicInfo);
+      syncPersonaState(payload);
+      updateBasicInfoState(!!state.referenceId && !!(basicInfo.full_name || payload.full_name));
+
+      var ubos = payload.ubos || payload.ubo_details || [];
+      if (Array.isArray(ubos) && ubos.length) {
+        ubos.forEach(function (ubo) {
+          addUboCard({
+            full_name: ubo.full_name,
+            email: ubo.email,
+            phone: ubo.phone,
+            ownership_percentage: ubo.ownership_percentage,
+            ubo_reference_id: ubo.ubo_reference_id,
+            persona_inquiry_id: ubo.persona_inquiry_id,
+            verified: ubo.verified === true || ubo.status === 'verified'
+          });
+        });
+      } else {
+        addUboCard();
+      }
+
+      hydrateDocuments(payload.documents || {});
+      updateDocumentState();
+      refreshUboCompletionState();
+      updateProgress();
+    }
+
+    async function loadResume(referenceId) {
+      if (!referenceId) {
+        showToast('Enter a KYC ID to resume.', 'error');
+        return;
+      }
+
+      try {
+        var response = await fetch(API_BASE + '/api/v2/onboarding/resume/' + encodeURIComponent(referenceId));
+        var data = await response.json();
+        var payload = parsePayload(data);
+        if (!response.ok) {
+          throw new Error(payload.detail || 'Could not load onboarding draft.');
+        }
+
+        hydrateResume(payload);
+        setReferenceId(referenceId);
+        showToast('Resumed onboarding for ' + referenceId + '.', 'success');
+      } catch (err) {
+        showToast(err.message || 'Could not load onboarding draft.', 'error');
+      }
+    }
+
+    async function saveBasicInfo() {
+      var fullName = document.getElementById('full-name').value.trim();
+      var companyName = document.getElementById('company-name').value.trim();
+      var email = document.getElementById('email').value.trim();
+      var phone = normalizePhone(document.getElementById('country-code').value, document.getElementById('phone').value);
+      var button = document.getElementById('save-basic-info-btn');
+
+      if (!fullName || !companyName || !email || !phone) {
+        showToast('Fill all required basic information fields first.', 'error');
+        return;
+      }
+
+      button.disabled = true;
+      setStatusChip(document.getElementById('basic-info-status'), 'pending', 'Saving');
+
+      try {
+        var payload = {
+          full_name: fullName,
+          email: email,
+          company_name: companyName,
+          phone: phone
+        };
+        if (state.referenceId) payload.reference_id = state.referenceId;
+
+        var response = await fetch(API_BASE + '/api/v2/onboarding/basic-info', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        var data = await response.json();
+        var parsed = parsePayload(data);
+        if (!response.ok) {
+          throw new Error(parsed.detail || 'Could not save basic info.');
+        }
+
+        if (parsed.reference_id) setReferenceId(parsed.reference_id);
+        syncPersonaState(parsed);
+        updateBasicInfoState(true);
+        showToast('Basic info saved.', 'success');
+      } catch (err) {
+        updateBasicInfoState(false);
+        setStatusChip(document.getElementById('basic-info-status'), 'error', 'Save failed');
+        showToast(err.message || 'Could not save basic info.', 'error');
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    async function saveDocuments() {
+      if (!state.referenceId) {
+        showToast('Save basic info first to get a KYC ID.', 'error');
+        return;
+      }
+
+      var unsyncedKeys = getUnsyncedDocumentKeys();
+      if (!unsyncedKeys.length) {
+        showToast('All uploaded document URLs are already saved.', 'success');
+        updateDocumentState();
+        return;
+      }
+
+      var button = document.getElementById('save-documents-btn');
+      button.disabled = true;
+      setStatusChip(document.getElementById('documents-status'), 'pending', 'Saving');
+
+      try {
+        for (var i = 0; i < unsyncedKeys.length; i += 1) {
+          var key = unsyncedKeys[i];
+          await persistSingleDocument(key, state.pendingDocuments[key]);
+          state.documents[key] = state.pendingDocuments[key];
+        }
+
+        document.querySelectorAll('.dropzone[data-doc-key]').forEach(function (dropzone) {
+          var key = dropzone.dataset.docKey;
+          if (state.documents[key]) {
+            setDropzonePreview(dropzone, state.documents[key], dropzone.querySelector('input[type="file"]').name + '.saved', 'Saved URL', true);
+          }
+        });
+        updateDocumentState();
+        showToast('Document URL sync complete.', 'success');
+      } catch (err) {
+        setStatusChip(document.getElementById('documents-status'), 'error', 'Save failed');
+        updateProgress();
+        showToast(err.message || 'Could not save one or more document URLs.', 'error');
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    function runPersonaUboVerification(uboReferenceId) {
+      return new Promise(function (resolve, reject) {
+        var client = new Persona.Client({
+          templateId: state.personaTemplateId,
+          environment: state.personaEnvironment,
+          referenceId: uboReferenceId,
+          onReady: function () {
+            client.open();
+          },
+          onComplete: function (data) {
+            resolve(data.inquiryId || '');
+          },
+          onFail: function () {
+            reject(new Error('UBO verification could not be completed.'));
+          },
+          onCancel: function () {
+            reject(new Error('UBO verification was cancelled.'));
+          }
+        });
+      });
+    }
+
+    function runCompanyPersonaVerification() {
+      var btn = document.getElementById('persona-verify-btn');
+      var statusEl = document.getElementById('persona-status');
+      var statusText = document.getElementById('persona-status-text');
+
+      if (!state.referenceId || !state.personaTemplateId || !state.personaEnvironment) {
+        statusEl.className = 'persona-status status-failed';
+        statusText.textContent = 'Persona is not configured for this onboarding profile yet.';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Verification in progress...';
+
+      var client = new Persona.Client({
+        templateId: state.personaTemplateId,
+        environment: state.personaEnvironment,
+        referenceId: state.referenceId,
+        onReady: function () {
+          client.open();
+        },
+        onComplete: function (data) {
+          state.personaInquiryId = data.inquiryId || '';
+          state.personaDone = true;
+          document.getElementById('persona_inquiry_id').value = state.personaInquiryId;
+          statusEl.className = 'persona-status status-completed';
+          statusText.textContent = 'Identity verified successfully.';
+          btn.style.display = 'none';
+          updateProgress();
+        },
+        onFail: function (data) {
+          document.getElementById('persona_inquiry_id').value = data.inquiryId || '';
+          statusEl.className = 'persona-status status-failed';
+          statusText.textContent = 'Verification could not be completed. Please try again.';
+          btn.disabled = false;
+          btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Retry verification';
+          updateProgress();
+        },
+        onCancel: function () {
+          btn.disabled = false;
+          btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Start verification';
+        }
+      });
+    }
+
+    document.getElementById('save-basic-info-btn').addEventListener('click', saveBasicInfo);
+    document.getElementById('save-documents-btn').addEventListener('click', saveDocuments);
+    document.getElementById('add-ubo-btn').addEventListener('click', function () {
+      addUboCard();
+    });
+
+    document.getElementById('persona-verify-btn').addEventListener('click', runCompanyPersonaVerification);
+
+    document.getElementById('resume-form').addEventListener('submit', function (event) {
+      event.preventDefault();
+      loadResume(document.getElementById('resume-reference-id').value.trim());
+    });
+
+    document.getElementById('copy-reference-btn').addEventListener('click', async function () {
+      if (!state.referenceId) {
+        showToast('No KYC ID available yet.', 'error');
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(state.referenceId);
+        showToast('KYC ID copied.', 'success');
+      } catch (err) {
+        showToast('Clipboard copy failed.', 'error');
+      }
+    });
+
+    document.getElementById('onboarding-form').addEventListener('submit', async function (event) {
+      event.preventDefault();
+
+      if (!(state.basicInfoSaved && state.ubosComplete && state.documentsSaved)) {
+        showToast('Complete and save all required stages before submitting.', 'error');
+        return;
+      }
+
+      var button = document.getElementById('submit-btn');
+      button.classList.add('loading');
+      button.disabled = true;
+
+      try {
+        var response = await fetch(API_BASE + '/api/v2/onboarding/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ reference_id: state.referenceId })
+        });
+        var data = await response.json();
+        var payload = parsePayload(data);
+        if (!response.ok) {
+          throw new Error(payload.detail || 'Final submission failed.');
+        }
+
+        document.getElementById('modal-reference').textContent = state.referenceId;
+        document.getElementById('success-modal-overlay').classList.add('show');
+        var count = 3;
+        document.getElementById('countdown-timer').textContent = count;
+        var interval = setInterval(function () {
+          count -= 1;
+          if (count >= 0) {
+            document.getElementById('countdown-timer').textContent = count;
+          } else {
+            clearInterval(interval);
+            window.location.href = 'https://vaulta.digital';
+          }
+        }, 1000);
+      } catch (err) {
+        button.classList.remove('loading');
+        button.disabled = false;
+        showToast(err.message || 'Final submission failed.', 'error');
+      }
+    });
+
+    attachDocumentDropzones();
+    addUboCard();
+    updateBasicInfoState(false);
+    hydrateDocuments({});
+    updateDocumentState();
+    refreshUboCompletionState();
+    syncPersonaState({});
+    updateProgress();
+
+    var queryReferenceId = getQueryReferenceId();
+    if (queryReferenceId) {
+      loadResume(queryReferenceId);
+    }
+  })();
+  </script>
+
+  <div id="success-modal-overlay" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+      </div>
+      <h2 class="modal-title">Success!</h2>
+      <p class="modal-reference">KYC ID: <span id="modal-reference"></span></p>
+      <p class="modal-message">Your onboarding has been submitted successfully and you will be redirected to Vaulta in <span id="countdown-timer" class="modal-countdown">3</span> seconds.</p>
+    </div>
+  </div>
+</body>
+</html>
