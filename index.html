@@ -785,7 +785,7 @@
 
     .submit-btn {
       background: var(--accent);
-      min-width: 220px;
+      min-width: 150px;
     }
 
     .submit-btn:hover:not(:disabled) { background: var(--accent-hover); }
@@ -1010,9 +1010,15 @@
 
   <div class="shell">
     <header class="top-bar">
-      <a class="brand" href="/">
+      <!-- <a class="brand" href="/">
         <span>Vaulta Digital Assets</span>
+      </a> -->
+      <a class="brand" href="/">
+        <div  style="overflow: hidden; width: 100px; height: 50px; vertical-align: auto;">
+          <img src="images/logo-4.png" alt="" srcset="" style="width: 100%;" >
+        </div>
       </a>
+
       <span class="env-badge">Secure Onboarding</span>
     </header>
 
@@ -1022,7 +1028,7 @@
           <div class="eyebrow">COMPLIANCE DOCUMENTATION</div>
           <h1 class="heading">Welcome to Vaulta Onboarding</h1>
           <p class="intro">
-            Welcome to Vaulta Onboarding You are onboarding to Vaulta’s institutional settlement infrastructure, enabling seamless movement between fiat and digital asset networks. This process ensures compliance with global AML/CFT standards and allows us to activate your account securely.
+            Welcome to Vaulta Onboarding. You are onboarding to Vaulta’s institutional settlement infrastructure, enabling seamless movement between fiat and digital asset networks. This process ensures compliance with global AML/CFT standards and allows us to activate your account securely.
           </p>
           <p class="required-note">
             <strong>Note:</strong> Fields marked <span class="required">*</span> are required. Files are uploaded to Firebase first, then saved to onboarding.
