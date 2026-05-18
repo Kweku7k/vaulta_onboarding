@@ -989,6 +989,69 @@
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
+    .pep-group {
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      background: var(--gray-50);
+    }
+
+    .pep-radio-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .pep-radio-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 18px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      background: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-700);
+      cursor: pointer;
+      transition: border-color var(--duration) var(--ease), background var(--duration) var(--ease);
+    }
+
+    .pep-radio-label:hover {
+      border-color: var(--accent);
+      background: var(--accent-bg);
+    }
+
+    .pep-radio-label input[type="radio"] {
+      accent-color: var(--accent);
+      width: 15px;
+      height: 15px;
+      cursor: pointer;
+    }
+
+    .pep-radio-label:has(input:checked) {
+      border-color: var(--accent);
+      background: var(--accent-bg);
+      color: var(--accent);
+    }
+
+    .pep-affiliation-wrap {
+      margin-top: 12px;
+      display: none;
+    }
+
+    .pep-affiliation-wrap.visible {
+      display: block;
+    }
+
+    .pep-affiliation-wrap label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-700);
+      margin-bottom: 6px;
+    }
+
     @media (max-width: 840px) {
       .layout { padding: 20px 16px 32px; }
       .layout-inner { grid-template-columns: 1fr; }
@@ -1088,6 +1151,24 @@
                   <option value="+65">+65</option>
                 </select>
                 <input type="tel" id="phone" name="phone" required placeholder="000 000 0000" class="text-input">
+              </div>
+            </div>
+
+            <div class="field pep-group" style="margin-bottom: 16px;">
+              <p style="margin:0 0 10px; font-size:13px; font-weight:500; color:var(--gray-700);">Are you or any associated person a <strong>Politically Exposed Person (PEP)</strong>?<span class="hint" style="display:block; font-weight:400; margin-top:3px;">A PEP holds or has held a prominent public function, or is closely associated with such a person (e.g. head of state, senior politician, senior government official, judicial or military official, senior executive of a state-owned enterprise, or important political party official).</span></p>
+              <div class="pep-radio-group">
+                <label class="pep-radio-label">
+                  <input type="radio" name="pep_is_pep" id="pep-yes" value="yes">
+                  <span>Yes</span>
+                </label>
+                <label class="pep-radio-label">
+                  <input type="radio" name="pep_is_pep" id="pep-no" value="no">
+                  <span>No</span>
+                </label>
+              </div>
+              <div class="pep-affiliation-wrap" id="pep-affiliation-wrap">
+                <label for="pep-affiliation">Please explain your affiliation<span class="required">*</span></label>
+                <textarea id="pep-affiliation" name="pep_affiliation" rows="3" class="text-input" placeholder="Describe the public function held and your relationship to it…" style="resize:vertical;"></textarea>
               </div>
             </div>
 
@@ -1378,7 +1459,7 @@
                 <span class="btn-label">Submit onboarding</span>
                 <span class="spinner"></span>
               </button>
-              <p class="legal-note">
+              <p style="text-align: center;">
                 By submitting you confirm the information provided is accurate, complete, and up to date.
                 Your reference ID will also be included in the final confirmation email.
               </p>
@@ -1570,6 +1651,12 @@
       if (payload.full_name) document.getElementById('full-name').value = payload.full_name;
       if (payload.company_name) document.getElementById('company-name').value = payload.company_name;
       if (payload.email) document.getElementById('email').value = payload.email;
+      var pepIsYes = payload.pep_is_pep === true || payload.pep_is_pep === 'yes' || payload.pep_is_pep === 'true';
+      var pepIsNo = payload.pep_is_pep === false || payload.pep_is_pep === 'no';
+      if (pepIsYes) document.getElementById('pep-yes').checked = true;
+      else if (pepIsNo) document.getElementById('pep-no').checked = true;
+      document.getElementById('pep-affiliation-wrap').classList.toggle('visible', pepIsYes);
+      document.getElementById('pep-affiliation').value = payload.pep_affiliation || '';
       if (payload.phone) {
         var fullPhone = String(payload.phone);
         var countryCodeSelect = document.getElementById('country-code');
@@ -2133,12 +2220,21 @@
       button.disabled = true;
       setStatusChip(document.getElementById('basic-info-status'), 'pending', 'Saving');
 
+      var pepIsExposed = document.getElementById('pep-yes').checked;
+      var pepAffiliation = document.getElementById('pep-affiliation').value.trim();
+      if (pepIsExposed && !pepAffiliation) {
+        showToast('Please explain your PEP affiliation before saving.', 'error');
+        return;
+      }
+
       try {
         var payload = {
           full_name: fullName,
           email: email,
           company_name: companyName,
-          phone: phone
+          phone: phone,
+          pep_is_pep: pepIsExposed,
+          pep_affiliation: pepIsExposed ? pepAffiliation : ''
         };
         if (state.referenceId) payload.reference_id = state.referenceId;
 
@@ -2274,6 +2370,14 @@
         }
       });
     }
+
+    document.querySelectorAll('input[name="pep_is_pep"]').forEach(function (radio) {
+      radio.addEventListener('change', function () {
+        var isYes = document.getElementById('pep-yes').checked;
+        document.getElementById('pep-affiliation-wrap').classList.toggle('visible', isYes);
+        if (!isYes) document.getElementById('pep-affiliation').value = '';
+      });
+    });
 
     document.getElementById('save-basic-info-btn').addEventListener('click', saveBasicInfo);
     document.getElementById('save-documents-btn').addEventListener('click', saveDocuments);
