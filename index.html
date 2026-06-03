@@ -1320,6 +1320,10 @@
                     <label for="primary-trading-market">Primary Trading Market</label>
                     <input type="text" id="primary-trading-market" name="primary_trading_market" placeholder="e.g. OTC, Exchange, FX" class="text-input">
                   </div>
+
+                  <div class="save-row" style="justify-content: flex-end; margin: 14px 0 0;">
+                    <button type="button" id="save-business-info-btn" class="secondary-btn">Save business information</button>
+                  </div>
                 </div>
               </div>
 
@@ -1496,6 +1500,10 @@
                       </label>
                     </div>
                   </div>
+                  <div class="save-row" style="margin-bottom: 0;">
+                    <span id="compliance-status" class="status-chip pending">Not saved yet</span>
+                    <button type="button" id="save-compliance-info-btn" class="primary-btn">Save compliance information</button>
+                  </div>
                 </div>
               </div>
 
@@ -1633,6 +1641,7 @@
       referenceId: '',
       firebaseConfig: null,
       basicInfoSaved: false,
+      complianceSaved: false,
       ubosComplete: false,
       documentsSaved: false,
       personaDone: false,
@@ -1694,6 +1703,27 @@
       element.textContent = text;
     }
 
+    function areComplianceFieldsComplete() {
+      var allAnswersSelected = [
+        'compliance_publicly_listed',
+        'compliance_high_risk_industries',
+        'compliance_cash_transactions_threshold',
+        'compliance_regulatory_penalties'
+      ].every(function (name) {
+        return getYesNoField(name) !== null;
+      });
+
+      if (!allAnswersSelected) return false;
+
+      return !document.getElementById('compliance-high-risk-industries-yes').checked || !!document.getElementById('high-risk-details').value.trim();
+    }
+
+    function updateComplianceState(saved) {
+      state.complianceSaved = saved;
+      setStatusChip(document.getElementById('compliance-status'), saved ? 'success' : 'pending', saved ? 'Saved' : 'Not saved yet');
+      updateProgress();
+    }
+
     function showToast(msg, type) {
       type = type || 'success';
       var t = document.createElement('div');
@@ -1738,14 +1768,7 @@
         document.getElementById('primary-trading-market').value.trim()
       );
 
-      var complianceComplete = [
-        'compliance_publicly_listed',
-        'compliance_high_risk_industries',
-        'compliance_cash_transactions_threshold',
-        'compliance_regulatory_penalties'
-      ].every(function (name) {
-        return getYesNoField(name) !== null;
-      });
+      var complianceComplete = areComplianceFieldsComplete();
 
       var sectionDone = {
         0: businessInfoComplete,
@@ -2336,6 +2359,7 @@
       applyBasicInfo(basicInfo);
       syncPersonaState(payload);
       updateBasicInfoState(!!state.referenceId && !!(basicInfo.full_name || payload.full_name));
+      updateComplianceState(!!state.referenceId && areComplianceFieldsComplete());
 
       var ubos = payload.ubos || payload.ubo_details || [];
       if (Array.isArray(ubos) && ubos.length) {
@@ -2390,14 +2414,17 @@
       var businessWebsite = document.getElementById('business-website').value.trim();
       var estimatedMonthlyVolume = document.getElementById('estimated-monthly-volume').value.trim();
       var primaryTradingMarket = document.getElementById('primary-trading-market').value.trim();
-      var button = document.getElementById('save-basic-info-btn');
+      var saveButtons = [
+        document.getElementById('save-basic-info-btn'),
+        document.getElementById('save-business-info-btn')
+      ].filter(Boolean);
 
       if (!fullName || !companyName || !email || !phone) {
         showToast('Fill all required basic information fields first.', 'error');
         return;
       }
 
-      button.disabled = true;
+      saveButtons.forEach(function (btn) { btn.disabled = true; });
       setStatusChip(document.getElementById('basic-info-status'), 'pending', 'Saving');
 
       var pepIsExposed = document.getElementById('pep-yes').checked;
@@ -2453,13 +2480,91 @@
         if (parsed.reference_id) setReferenceId(parsed.reference_id);
         syncPersonaState(parsed);
         updateBasicInfoState(true);
+        updateComplianceState(areComplianceFieldsComplete());
         showToast('Basic info saved.', 'success');
       } catch (err) {
         updateBasicInfoState(false);
         setStatusChip(document.getElementById('basic-info-status'), 'error', 'Save failed');
         showToast(err.message || 'Could not save basic info.', 'error');
       } finally {
-        button.disabled = false;
+        saveButtons.forEach(function (btn) { btn.disabled = false; });
+      }
+    }
+
+    async function saveComplianceInfo() {
+      if (!state.referenceId) {
+        showToast('Save basic info first to get a KYC ID.', 'error');
+        return;
+      }
+
+      var fullName = document.getElementById('full-name').value.trim();
+      var companyName = document.getElementById('company-name').value.trim();
+      var email = document.getElementById('email').value.trim();
+      var phone = normalizePhone(document.getElementById('country-code').value, document.getElementById('phone').value);
+      var businessWebsite = document.getElementById('business-website').value.trim();
+      var estimatedMonthlyVolume = document.getElementById('estimated-monthly-volume').value.trim();
+      var primaryTradingMarket = document.getElementById('primary-trading-market').value.trim();
+      var pepIsExposed = document.getElementById('pep-yes').checked;
+      var pepAffiliation = document.getElementById('pep-affiliation').value.trim();
+      var compliancePubliclyListed = getYesNoField('compliance_publicly_listed');
+      var complianceHighRiskIndustries = getYesNoField('compliance_high_risk_industries');
+      var complianceCashTransactionsThreshold = getYesNoField('compliance_cash_transactions_threshold');
+      var complianceRegulatoryPenalties = getYesNoField('compliance_regulatory_penalties');
+      var highRiskIndustriesDetails = document.getElementById('high-risk-details').value.trim();
+      var saveButton = document.getElementById('save-compliance-info-btn');
+
+      if (compliancePubliclyListed === null || complianceHighRiskIndustries === null || complianceCashTransactionsThreshold === null || complianceRegulatoryPenalties === null) {
+        showToast('Fill all compliance questions first.', 'error');
+        return;
+      }
+
+      if (document.getElementById('compliance-high-risk-industries-yes').checked && !highRiskIndustriesDetails) {
+        showToast('Please specify the high risk industries before saving.', 'error');
+        return;
+      }
+
+      saveButton.disabled = true;
+      setStatusChip(document.getElementById('compliance-status'), 'pending', 'Saving');
+
+      try {
+        var payload = {
+          reference_id: state.referenceId,
+          full_name: fullName,
+          email: email,
+          company_name: companyName,
+          phone: phone,
+          business_website: businessWebsite,
+          estimated_monthly_volume: estimatedMonthlyVolume,
+          primary_trading_market: primaryTradingMarket,
+          pep_is_pep: pepIsExposed,
+          pep_affiliation: pepIsExposed ? pepAffiliation : '',
+          business_publicly_listed: compliancePubliclyListed,
+          operates_in_high_risk_industries: complianceHighRiskIndustries,
+          cash_transactions_above_regulatory_threshold: complianceCashTransactionsThreshold,
+          regulatory_penalties_or_investigations: complianceRegulatoryPenalties,
+          high_risk_industries_details: document.getElementById('compliance-high-risk-industries-yes').checked ? highRiskIndustriesDetails : ''
+        };
+
+        var response = await fetch(API_BASE + '/api/v2/onboarding/basic-info', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        var data = await response.json();
+        var parsed = parsePayload(data);
+        if (!response.ok) {
+          throw new Error(parsed.detail || 'Could not save compliance information.');
+        }
+
+        updateComplianceState(true);
+        showToast('Compliance information saved.', 'success');
+      } catch (err) {
+        updateComplianceState(false);
+        setStatusChip(document.getElementById('compliance-status'), 'error', 'Save failed');
+        showToast(err.message || 'Could not save compliance information.', 'error');
+      } finally {
+        saveButton.disabled = false;
       }
     }
 
@@ -2599,6 +2704,8 @@
     });
 
     document.getElementById('save-basic-info-btn').addEventListener('click', saveBasicInfo);
+    document.getElementById('save-business-info-btn').addEventListener('click', saveBasicInfo);
+    document.getElementById('save-compliance-info-btn').addEventListener('click', saveComplianceInfo);
     document.getElementById('save-documents-btn').addEventListener('click', saveDocuments);
     document.getElementById('add-ubo-btn').addEventListener('click', function () {
       addUboCard();
@@ -2672,6 +2779,7 @@
     attachDocumentDropzones();
     addUboCard();
     updateBasicInfoState(false);
+    updateComplianceState(false);
     hydrateDocuments({});
     updateDocumentState();
     refreshUboCompletionState();
