@@ -212,6 +212,17 @@
       margin-bottom: 0;
     }
 
+    .sections .accordion-item { order: 99; }
+    .sections .accordion-item[data-section="0"] { order: 0; }
+    .sections .accordion-item[data-section="1"] { order: 1; }
+    .sections .accordion-item[data-section="2"] { order: 2; }
+    .sections .accordion-item[data-section="3"] { order: 3; }
+    .sections .accordion-item[data-section="4"] { order: 4; }
+    .sections .accordion-item[data-section="5"] { order: 5; }
+    .sections .accordion-item[data-section="6"] { order: 6; }
+    .sections .accordion-item[data-section="7"] { order: 7; }
+    .sections .accordion-item[data-section="8"] { order: 8; }
+
     .accordion-item {
       border: 1px solid var(--gray-200);
       border-radius: var(--radius-md);
@@ -1178,7 +1189,7 @@
             </div>
 
             <div class="sections">
-              <div class="accordion-item" data-section="0">
+              <div class="accordion-item" data-section="2">
                 <div class="accordion-header">
                   <div class="accordion-header-left">
                     <span class="section-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>
@@ -1230,7 +1241,7 @@
                 </div>
               </div>
 
-              <div class="accordion-item" data-section="1">
+              <div class="accordion-item" data-section="3">
                 <div class="accordion-header">
                   <div class="accordion-header-left">
                     <span class="section-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>
@@ -1250,7 +1261,7 @@
                 </div>
               </div>
 
-              <div class="accordion-item" data-section="2">
+              <div class="accordion-item" data-section="4">
                 <div class="accordion-header">
                   <div class="accordion-header-left">
                     <span class="section-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>
@@ -1283,7 +1294,36 @@
                 </div>
               </div>
 
-              <div class="accordion-item" data-section="3">
+              <div class="accordion-item" data-section="0">
+                <div class="accordion-header">
+                  <div class="accordion-header-left">
+                    <span class="section-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>
+                    <div class="accordion-header-text">
+                      <div class="accordion-title">Business Information</div>
+                      <div class="accordion-subtitle">Website, monthly volume, and primary trading market</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-body">
+                  <p class="section-subcopy">Provide your core business profile details to support onboarding assessment.</p>
+                  <div class="field" style="margin-bottom: 12px;">
+                    <label for="business-website">Business Website</label>
+                    <input type="url" id="business-website" name="business_website" placeholder="https://yourcompany.com" class="text-input">
+                  </div>
+
+                  <div class="field" style="margin-bottom: 12px;">
+                    <label for="estimated-monthly-volume">Estimated Monthly Volume</label>
+                    <input type="text" id="estimated-monthly-volume" name="estimated_monthly_volume" placeholder="e.g. USD 1,000,000" class="text-input">
+                  </div>
+
+                  <div class="field" style="margin-bottom: 0;">
+                    <label for="primary-trading-market">Primary Trading Market</label>
+                    <input type="text" id="primary-trading-market" name="primary_trading_market" placeholder="e.g. OTC, Exchange, FX" class="text-input">
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion-item" data-section="5">
                 <div class="accordion-header">
                   <div class="accordion-header-left">
                     <span class="section-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>
@@ -1317,7 +1357,7 @@
                 </div>
               </div>
 
-              <div class="accordion-item" data-section="4">
+              <div class="accordion-item" data-section="6">
                 <div class="accordion-header">
                   <div class="accordion-header-left">
                     <span class="section-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>
@@ -1350,7 +1390,7 @@
                 </div>
               </div>
 
-              <div class="accordion-item" data-section="5">
+              <div class="accordion-item" data-section="7">
                 <div class="accordion-header">
                   <div class="accordion-header-left">
                     <span class="section-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>
@@ -1384,7 +1424,82 @@
                 </div>
               </div>
 
-              <div class="accordion-item" data-section="6">
+              <div class="accordion-item" data-section="1">
+                <div class="accordion-header">
+                  <div class="accordion-header-left">
+                    <span class="section-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>
+                    <div class="accordion-header-text">
+                      <div class="accordion-title">Compliance and Risk Assessment</div>
+                      <div class="accordion-subtitle">Answer five mandatory compliance screening questions</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-body">
+                  <p class="section-subcopy">Provide a Yes or No answer for each question below.</p>
+
+                  <div class="field pep-group" style="margin-bottom: 16px;">
+                    <p style="margin:0 0 10px; font-size:13px; font-weight:500; color:var(--gray-700);">1. Is this business publicly listed?<span class="required">*</span></p>
+                    <div class="pep-radio-group">
+                      <label class="pep-radio-label">
+                        <input type="radio" name="compliance_publicly_listed" id="compliance-publicly-listed-yes" value="yes">
+                        <span>Yes</span>
+                      </label>
+                      <label class="pep-radio-label">
+                        <input type="radio" name="compliance_publicly_listed" id="compliance-publicly-listed-no" value="no">
+                        <span>No</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="field pep-group" style="margin-bottom: 16px;">
+                    <p style="margin:0 0 10px; font-size:13px; font-weight:500; color:var(--gray-700);">2. Does the business operate in any high risk industries?<span class="required">*</span></p>
+                    <div class="pep-radio-group">
+                      <label class="pep-radio-label">
+                        <input type="radio" name="compliance_high_risk_industries" id="compliance-high-risk-industries-yes" value="yes">
+                        <span>Yes</span>
+                      </label>
+                      <label class="pep-radio-label">
+                        <input type="radio" name="compliance_high_risk_industries" id="compliance-high-risk-industries-no" value="no">
+                        <span>No</span>
+                      </label>
+                    </div>
+                    <div class="pep-affiliation-wrap" id="high-risk-details-wrap">
+                      <label for="high-risk-details">Please specify the high risk industries<span class="required">*</span></label>
+                      <textarea id="high-risk-details" name="high_risk_industries_details" rows="3" class="text-input" placeholder="Describe the business activity and the applicable industry risk factors..." style="resize:vertical;"></textarea>
+                    </div>
+                  </div>
+
+                  <div class="field pep-group" style="margin-bottom: 16px;">
+                    <p style="margin:0 0 10px; font-size:13px; font-weight:500; color:var(--gray-700);">3. Does the business engage in cash transactions above the regulatory threshold?<span class="required">*</span></p>
+                    <div class="pep-radio-group">
+                      <label class="pep-radio-label">
+                        <input type="radio" name="compliance_cash_transactions_threshold" id="compliance-cash-transactions-threshold-yes" value="yes">
+                        <span>Yes</span>
+                      </label>
+                      <label class="pep-radio-label">
+                        <input type="radio" name="compliance_cash_transactions_threshold" id="compliance-cash-transactions-threshold-no" value="no">
+                        <span>No</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="field pep-group" style="margin-bottom: 16px;">
+                    <p style="margin:0 0 10px; font-size:13px; font-weight:500; color:var(--gray-700);">4. Has the business ever been subject to regulatory penalties or investigations?<span class="required">*</span></p>
+                    <div class="pep-radio-group">
+                      <label class="pep-radio-label">
+                        <input type="radio" name="compliance_regulatory_penalties" id="compliance-regulatory-penalties-yes" value="yes">
+                        <span>Yes</span>
+                      </label>
+                      <label class="pep-radio-label">
+                        <input type="radio" name="compliance_regulatory_penalties" id="compliance-regulatory-penalties-no" value="no">
+                        <span>No</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion-item" data-section="8">
                 <div class="accordion-header">
                   <div class="accordion-header-left">
                     <span class="section-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>
@@ -1432,7 +1547,7 @@
 
             <div class="persona-divider"><span class="persona-divider-text">Identity verification</span></div>
 
-            <div class="persona-card" id="persona-section" data-section="7">
+            <div class="persona-card" id="persona-section" data-section="9">
               <span class="persona-icon-wrap">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
               </span>
@@ -1469,17 +1584,19 @@
 
         <aside class="rail">
           <div class="rail-title">Compliance Requirements</div>
-          <p class="rail-progress-text"><span id="rail-count">0</span> of <span id="rail-total">8</span> complete</p>
+          <p class="rail-progress-text"><span id="rail-count">0</span> of <span id="rail-total">10</span> complete</p>
           <div class="rail-bar-track"><div class="rail-bar-fill" id="rail-bar"></div></div>
           <ul class="rail-checklist" id="rail-checklist">
-            <li class="active" data-rail="0"><span class="rail-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Certificate of Incorporation &amp; Constitutional Documents</li>
-            <li data-rail="1"><span class="rail-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Ultimate Beneficial Ownership (UBO) Details</li>
-            <li data-rail="2"><span class="rail-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Company Overview &amp; Organisational Structure</li>
-            <li data-rail="3"><span class="rail-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Director &amp; Shareholder Identification</li>
-            <li data-rail="4"><span class="rail-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Registered Address Verification</li>
-            <li data-rail="5"><span class="rail-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Regulatory Status &amp; Licensing Information</li>
-            <li data-rail="6"><span class="rail-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Source of Funds &amp; Financial Standing</li>
-            <li data-rail="7"><span class="rail-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Identity Verification</li>
+            <li class="active" data-rail="0"><span class="rail-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Business Information</li>
+            <li data-rail="1"><span class="rail-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Compliance and Risk Assessment</li>
+            <li data-rail="2"><span class="rail-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Certificate of Incorporation &amp; Constitutional Documents</li>
+            <li data-rail="3"><span class="rail-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Ultimate Beneficial Ownership (UBO) Details</li>
+            <li data-rail="4"><span class="rail-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Company Overview &amp; Organisational Structure</li>
+            <li data-rail="5"><span class="rail-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Director &amp; Shareholder Identification</li>
+            <li data-rail="6"><span class="rail-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Registered Address Verification</li>
+            <li data-rail="7"><span class="rail-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Regulatory Status &amp; Licensing Information</li>
+            <li data-rail="8"><span class="rail-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Source of Funds &amp; Financial Standing</li>
+            <li data-rail="9"><span class="rail-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Identity Verification</li>
           </ul>
           <div class="rail-divider"></div>
           <div class="rail-help-title">Need assistance?</div>
@@ -1498,7 +1615,7 @@
     'use strict';
 
     var API_BASE = 'https://backend.vaulta.digital';
-    var TOTAL_STAGES = 8;
+    var TOTAL_STAGES = 10;
     var REQUIRED_DOCUMENT_KEYS = [
       'certificate_of_incorporation',
       'memorandum_and_articles',
@@ -1551,6 +1668,27 @@
       return countryCode + cleaned.replace(/^0+/, '');
     }
 
+    function parseYesNo(value) {
+      if (value === true || value === 'yes' || value === 'true' || value === 1 || value === '1') return true;
+      if (value === false || value === 'no' || value === 'false' || value === 0 || value === '0') return false;
+      return null;
+    }
+
+    function getYesNoField(name) {
+      var checked = document.querySelector('input[name="' + name + '"]:checked');
+      if (!checked) return null;
+      return checked.value === 'yes';
+    }
+
+    function setYesNoField(name, value) {
+      var normalized = parseYesNo(value);
+      if (normalized === null) return;
+      var yes = document.querySelector('input[name="' + name + '"][value="yes"]');
+      var no = document.querySelector('input[name="' + name + '"][value="no"]');
+      if (yes) yes.checked = normalized;
+      if (no) no.checked = !normalized;
+    }
+
     function setStatusChip(element, kind, text) {
       element.className = 'status-chip ' + kind;
       element.textContent = text;
@@ -1594,15 +1732,32 @@
     }
 
     function updateProgress() {
+      var businessInfoComplete = !!(
+        document.getElementById('business-website').value.trim() &&
+        document.getElementById('estimated-monthly-volume').value.trim() &&
+        document.getElementById('primary-trading-market').value.trim()
+      );
+
+      var complianceComplete = [
+        'compliance_publicly_listed',
+        'compliance_high_risk_industries',
+        'compliance_cash_transactions_threshold',
+        'compliance_regulatory_penalties'
+      ].every(function (name) {
+        return getYesNoField(name) !== null;
+      });
+
       var sectionDone = {
-        0: !!(state.documents.certificate_of_incorporation && state.documents.memorandum_and_articles),
-        1: state.ubosComplete,
-        2: !!state.documents.company_profile,
-        3: !!state.documents.id_documents,
-        4: !!state.documents.company_address_proof,
-        5: state.documentsSaved || !!state.documents.regulatory_information,
-        6: !!state.documents.source_of_funds,
-        7: state.personaDone
+        0: businessInfoComplete,
+        1: complianceComplete,
+        2: !!(state.documents.certificate_of_incorporation && state.documents.memorandum_and_articles),
+        3: state.ubosComplete,
+        4: !!state.documents.company_profile,
+        5: !!state.documents.id_documents,
+        6: !!state.documents.company_address_proof,
+        7: state.documentsSaved || !!state.documents.regulatory_information,
+        8: !!state.documents.source_of_funds,
+        9: state.personaDone
       };
       var done = Object.keys(sectionDone).reduce(function (count, key) {
         return count + (sectionDone[key] ? 1 : 0);
@@ -1628,7 +1783,7 @@
     document.querySelectorAll('#rail-checklist li').forEach(function (li) {
       li.addEventListener('click', function () {
         var index = parseInt(li.dataset.rail, 10);
-        if (index < 7) {
+        if (index < 9) {
           var target = document.querySelector('.accordion-item[data-section="' + index + '"]');
           if (target) {
             target.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1651,12 +1806,34 @@
       if (payload.full_name) document.getElementById('full-name').value = payload.full_name;
       if (payload.company_name) document.getElementById('company-name').value = payload.company_name;
       if (payload.email) document.getElementById('email').value = payload.email;
+      document.getElementById('business-website').value = payload.business_website || '';
+      document.getElementById('estimated-monthly-volume').value = payload.estimated_monthly_volume || '';
+      document.getElementById('primary-trading-market').value = payload.primary_trading_market || '';
       var pepIsYes = payload.pep_is_pep === true || payload.pep_is_pep === 'yes' || payload.pep_is_pep === 'true';
       var pepIsNo = payload.pep_is_pep === false || payload.pep_is_pep === 'no';
       if (pepIsYes) document.getElementById('pep-yes').checked = true;
       else if (pepIsNo) document.getElementById('pep-no').checked = true;
       document.getElementById('pep-affiliation-wrap').classList.toggle('visible', pepIsYes);
       document.getElementById('pep-affiliation').value = payload.pep_affiliation || '';
+
+      var publiclyListed = payload.business_publicly_listed;
+      if (publiclyListed === undefined) publiclyListed = payload.compliance_publicly_listed;
+      var highRiskIndustries = payload.operates_in_high_risk_industries;
+      if (highRiskIndustries === undefined) highRiskIndustries = payload.compliance_high_risk_industries;
+      var cashTransactionsThreshold = payload.cash_transactions_above_regulatory_threshold;
+      if (cashTransactionsThreshold === undefined) cashTransactionsThreshold = payload.compliance_cash_transactions_threshold;
+      var regulatoryPenalties = payload.regulatory_penalties_or_investigations;
+      if (regulatoryPenalties === undefined) regulatoryPenalties = payload.compliance_regulatory_penalties;
+
+      setYesNoField('compliance_publicly_listed', publiclyListed);
+      setYesNoField('compliance_high_risk_industries', highRiskIndustries);
+      setYesNoField('compliance_cash_transactions_threshold', cashTransactionsThreshold);
+      setYesNoField('compliance_regulatory_penalties', regulatoryPenalties);
+
+      var highRiskIsYes = parseYesNo(highRiskIndustries) === true;
+      document.getElementById('high-risk-details-wrap').classList.toggle('visible', highRiskIsYes);
+      document.getElementById('high-risk-details').value = payload.high_risk_industries_details || '';
+
       if (payload.phone) {
         var fullPhone = String(payload.phone);
         var countryCodeSelect = document.getElementById('country-code');
@@ -2210,6 +2387,9 @@
       var companyName = document.getElementById('company-name').value.trim();
       var email = document.getElementById('email').value.trim();
       var phone = normalizePhone(document.getElementById('country-code').value, document.getElementById('phone').value);
+      var businessWebsite = document.getElementById('business-website').value.trim();
+      var estimatedMonthlyVolume = document.getElementById('estimated-monthly-volume').value.trim();
+      var primaryTradingMarket = document.getElementById('primary-trading-market').value.trim();
       var button = document.getElementById('save-basic-info-btn');
 
       if (!fullName || !companyName || !email || !phone) {
@@ -2227,15 +2407,35 @@
         return;
       }
 
+      var highRiskIndustriesIsYes = document.getElementById('compliance-high-risk-industries-yes').checked;
+      var highRiskIndustriesDetails = document.getElementById('high-risk-details').value.trim();
+      if (highRiskIndustriesIsYes && !highRiskIndustriesDetails) {
+        showToast('Please specify the high risk industries before saving.', 'error');
+        return;
+      }
+
       try {
+        var compliancePubliclyListed = getYesNoField('compliance_publicly_listed');
+        var complianceHighRiskIndustries = getYesNoField('compliance_high_risk_industries');
+        var complianceCashTransactionsThreshold = getYesNoField('compliance_cash_transactions_threshold');
+        var complianceRegulatoryPenalties = getYesNoField('compliance_regulatory_penalties');
+
         var payload = {
           full_name: fullName,
           email: email,
           company_name: companyName,
           phone: phone,
+          business_website: businessWebsite,
+          estimated_monthly_volume: estimatedMonthlyVolume,
+          primary_trading_market: primaryTradingMarket,
           pep_is_pep: pepIsExposed,
           pep_affiliation: pepIsExposed ? pepAffiliation : ''
         };
+        if (compliancePubliclyListed !== null) payload.business_publicly_listed = compliancePubliclyListed;
+        if (complianceHighRiskIndustries !== null) payload.operates_in_high_risk_industries = complianceHighRiskIndustries;
+        if (complianceCashTransactionsThreshold !== null) payload.cash_transactions_above_regulatory_threshold = complianceCashTransactionsThreshold;
+        if (complianceRegulatoryPenalties !== null) payload.regulatory_penalties_or_investigations = complianceRegulatoryPenalties;
+        payload.high_risk_industries_details = highRiskIndustriesIsYes ? highRiskIndustriesDetails : '';
         if (state.referenceId) payload.reference_id = state.referenceId;
 
         var response = await fetch(API_BASE + '/api/v2/onboarding/basic-info', {
@@ -2377,6 +2577,25 @@
         document.getElementById('pep-affiliation-wrap').classList.toggle('visible', isYes);
         if (!isYes) document.getElementById('pep-affiliation').value = '';
       });
+    });
+
+    document.querySelectorAll('input[name="compliance_high_risk_industries"]').forEach(function (radio) {
+      radio.addEventListener('change', function () {
+        var isYes = document.getElementById('compliance-high-risk-industries-yes').checked;
+        document.getElementById('high-risk-details-wrap').classList.toggle('visible', isYes);
+        if (!isYes) document.getElementById('high-risk-details').value = '';
+      });
+    });
+
+    document.querySelectorAll('input[name^="compliance_"]').forEach(function (radio) {
+      radio.addEventListener('change', updateProgress);
+    });
+
+    ['business-website', 'estimated-monthly-volume', 'primary-trading-market'].forEach(function (id) {
+      var field = document.getElementById(id);
+      if (!field) return;
+      field.addEventListener('input', updateProgress);
+      field.addEventListener('change', updateProgress);
     });
 
     document.getElementById('save-basic-info-btn').addEventListener('click', saveBasicInfo);
