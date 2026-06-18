@@ -1166,12 +1166,6 @@
               </div>
             </div>
 
-            <div class="field" style="margin-bottom: 20px;">
-              <label for="wallet-address">Wallet address</label>
-              <input type="text" id="wallet-address" name="wallet_address" placeholder="e.g. 0x1234… or bc1q…" class="text-input" autocomplete="off" spellcheck="false">
-              <p class="hint">Primary on-chain address used for settlement (EVM, Bitcoin, or other network).</p>
-            </div>
-
             <div class="field pep-group" style="margin-bottom: 16px;">
               <p style="margin:0 0 10px; font-size:13px; font-weight:500; color:var(--gray-700);">Are you or any associated person a <strong>Politically Exposed Person (PEP)</strong>?<span class="hint" style="display:block; font-weight:400; margin-top:3px;">A PEP holds or has held a prominent public function, or is closely associated with such a person (e.g. head of state, senior politician, senior government official, judicial or military official, senior executive of a state-owned enterprise, or important political party official).</span></p>
               <div class="pep-radio-group">
@@ -1307,7 +1301,7 @@
                     <span class="section-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>
                     <div class="accordion-header-text">
                       <div class="accordion-title">Business Information</div>
-                      <div class="accordion-subtitle">Website, monthly volume, and primary trading market</div>
+                      <div class="accordion-subtitle">Website, monthly volume, wallet address,and primary trading market</div>
                     </div>
                   </div>
                 </div>
@@ -1323,9 +1317,15 @@
                     <input type="text" id="estimated-monthly-volume" name="estimated_monthly_volume" placeholder="e.g. USD 1,000,000" class="text-input">
                   </div>
 
-                  <div class="field" style="margin-bottom: 0;">
+                  <div class="field" style="margin-bottom: 12px;">
                     <label for="primary-trading-market">Primary Trading Market</label>
                     <input type="text" id="primary-trading-market" name="primary_trading_market" placeholder="e.g. OTC, Exchange, FX" class="text-input">
+                  </div>
+
+                  <div class="field" style="margin-bottom: 0;">
+                    <label for="wallet-address">Wallet address</label>
+                    <input type="text" id="wallet-address" name="wallet_address" placeholder="e.g. 0x1234… or bc1q…" class="text-input" autocomplete="off" spellcheck="false">
+                    <p class="hint">Primary onchain settlement wallet address for whitelisting (ERC20 preferred)</p>
                   </div>
 
                   <div class="save-row" style="justify-content: flex-end; margin: 14px 0 0;">
