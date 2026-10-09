@@ -795,6 +795,18 @@
       padding-top: 20px;
     }
 
+    .otp-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .otp-row .text-input {
+      width: 160px;
+      letter-spacing: 0.3em;
+    }
+
     .submit-btn {
       background: var(--accent);
       min-width: 150px;
@@ -1619,6 +1631,14 @@
             </div>
 
             <div class="footer">
+              <div class="field" id="otp-section">
+                <label for="otp-input">Email verification code<span class="required">*</span></label>
+                <div class="otp-row">
+                  <input type="text" id="otp-input" class="text-input" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="000000">
+                  <button type="button" id="send-otp-btn" class="secondary-btn">Send code</button>
+                </div>
+                <p id="otp-helper" class="hint">We'll email a 6-digit code to the address in Business Information. Enter it here to submit.</p>
+              </div>
               <button type="submit" class="submit-btn" id="submit-btn">
                 <span class="btn-label">Submit onboarding</span>
                 <span class="spinner"></span>
@@ -2800,11 +2820,62 @@
       }
     });
 
+    document.getElementById('send-otp-btn').addEventListener('click', async function () {
+      if (!state.referenceId || !state.basicInfoSaved) {
+        showToast('Save your basic info first so we know where to send the code.', 'error');
+        return;
+      }
+
+      var button = this;
+      var helper = document.getElementById('otp-helper');
+      button.disabled = true;
+
+      try {
+        var response = await fetch(API_BASE + '/api/v2/onboarding/otp/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Recaptcha-Token': await getRecaptchaToken('otp_send') },
+          body: JSON.stringify({ reference_id: state.referenceId })
+        });
+        var data = await response.json();
+        var payload = parsePayload(data);
+        if (!response.ok) {
+          throw new Error(payload.detail || 'Could not send the verification code.');
+        }
+
+        helper.textContent = 'Code sent to ' + (payload.email || 'your email') + '. It expires in 10 minutes.';
+        showToast('Verification code sent.', 'success');
+        document.getElementById('otp-input').focus();
+
+        var seconds = 60;
+        button.textContent = 'Resend in ' + seconds + 's';
+        var timer = setInterval(function () {
+          seconds -= 1;
+          if (seconds > 0) {
+            button.textContent = 'Resend in ' + seconds + 's';
+          } else {
+            clearInterval(timer);
+            button.textContent = 'Resend code';
+            button.disabled = false;
+          }
+        }, 1000);
+      } catch (err) {
+        button.disabled = false;
+        showToast(err.message || 'Could not send the verification code.', 'error');
+      }
+    });
+
     document.getElementById('onboarding-form').addEventListener('submit', async function (event) {
       event.preventDefault();
 
       if (!(state.basicInfoSaved && state.ubosComplete && state.documentsSaved)) {
         showToast('Complete and save all required stages before submitting.', 'error');
+        return;
+      }
+
+      var otp = document.getElementById('otp-input').value.trim();
+      if (!/^[0-9]{6}$/.test(otp)) {
+        showToast('Enter the 6-digit code we emailed you.', 'error');
+        document.getElementById('otp-input').focus();
         return;
       }
 
@@ -2816,7 +2887,7 @@
         var response = await fetch(API_BASE + '/api/v2/onboarding/submit', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'X-Recaptcha-Token': await getRecaptchaToken('submit') },
-          body: JSON.stringify({ reference_id: state.referenceId })
+          body: JSON.stringify({ reference_id: state.referenceId, otp: otp })
         });
         var data = await response.json();
         var payload = parsePayload(data);
