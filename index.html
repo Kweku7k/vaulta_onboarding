@@ -1665,7 +1665,29 @@
     'use strict';
 
     var API_BASE = 'https://backend.vaulta.digital';
+    // Public reCAPTCHA v3 site key; the matching secret lives on the backend.
+    var RECAPTCHA_SITE_KEY = '6LcCL-YtAAAAAFfpu9_hzQPkupsUbXHiL6-NZ_GE';
     var TOTAL_STAGES = 11;
+
+    var recaptchaScript = document.createElement('script');
+    recaptchaScript.src = 'https://www.google.com/recaptcha/api.js?render=' + encodeURIComponent(RECAPTCHA_SITE_KEY);
+    recaptchaScript.async = true;
+    document.head.appendChild(recaptchaScript);
+
+    // Tokens expire after two minutes, so fetch one right before each protected request.
+    function getRecaptchaToken(action) {
+      return new Promise(function (resolve, reject) {
+        if (!window.grecaptcha || !window.grecaptcha.ready) {
+          reject(new Error('Security check failed to load. Please disable ad blockers and reload the page.'));
+          return;
+        }
+        window.grecaptcha.ready(function () {
+          window.grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: action }).then(resolve, function () {
+            reject(new Error('Security check failed. Please reload the page and try again.'));
+          });
+        });
+      });
+    }
     var REQUIRED_DOCUMENT_KEYS = [
       'certificate_of_incorporation',
       'memorandum_and_articles',
@@ -2513,7 +2535,7 @@
 
         var response = await fetch(API_BASE + '/api/v2/onboarding/basic-info', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'X-Recaptcha-Token': await getRecaptchaToken('basic_info') },
           body: JSON.stringify(payload)
         });
 
@@ -2593,7 +2615,7 @@
 
         var response = await fetch(API_BASE + '/api/v2/onboarding/basic-info', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'X-Recaptcha-Token': await getRecaptchaToken('basic_info') },
           body: JSON.stringify(payload)
         });
 
@@ -2793,7 +2815,7 @@
       try {
         var response = await fetch(API_BASE + '/api/v2/onboarding/submit', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'X-Recaptcha-Token': await getRecaptchaToken('submit') },
           body: JSON.stringify({ reference_id: state.referenceId })
         });
         var data = await response.json();
