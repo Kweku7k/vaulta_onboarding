@@ -1408,13 +1408,12 @@
 
     // For Firebase JS SDK v7.20.0 and later, measurementId is optional
     const firebaseConfig = {
-      apiKey: "AIzaSyBvCTmggya8ZRyXZmUjQm99qUWBoVB9eeI",
-      authDomain: "prestoqchats.firebaseapp.com",
-      projectId: "prestoqchats",
-      storageBucket: "temp_v_db2",
-      messagingSenderId: "355368008486",
-      appId: "1:355368008486:web:623404dccafb9046e51fe7",
-      measurementId: "G-FTS2L3C4XP"
+      apiKey: "AIzaSyBZz-1eD9IQ_xqkE-oNn_v6TFPan4iaQbg",
+      authDomain: "v-store-d7738.firebaseapp.com",
+      projectId: "v-store-d7738",
+      storageBucket: "v-store-d7738.firebasestorage.app",
+      messagingSenderId: "695067898554",
+      appId: "1:695067898554:web:0b895770521d83fbc0c883"
     };
     firebase.initializeApp(firebaseConfig);
     var __storage = firebase.storage();
@@ -1705,7 +1704,8 @@
         // Upload immediately to Firebase Storage
         if (fieldName && typeof window.__uploadToFirebase === 'function') {
           var refId = window.__ONBOARDING_REFERENCE_ID || 'unknown';
-          var storagePath = 'onboarding/' + refId + '/' + fieldName + '/' + Date.now() + '_' + file.name;
+          // Storage rules only allow uploads under onboarding-v2/.
+          var storagePath = 'onboarding-v2/' + refId + '/' + fieldName + '/' + Date.now() + '_' + file.name;
           try {
             var url = await window.__uploadToFirebase(file, storagePath);
             uploadedUrls[fieldName] = url;
