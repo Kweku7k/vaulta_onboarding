@@ -147,7 +147,7 @@
 
     .reference-banner {
       display: grid;
-      grid-template-columns: 1fr auto;
+      grid-template-columns: minmax(0, 1fr) auto;
       gap: 16px;
       align-items: end;
       padding: 18px;
@@ -184,13 +184,28 @@
       font-weight: 600;
       color: var(--gray-900);
       letter-spacing: .04em;
+      white-space: nowrap;
     }
 
+    /* KYC ID row and the code row share one grid so their inputs and
+       buttons line up: [input] [button] [button]. */
     .reference-actions {
-      display: flex;
+      display: grid;
+      grid-template-columns: 220px auto auto;
       gap: 8px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .reference-actions .inline-form {
+      display: contents;
+    }
+
+    .reference-actions .inline-form .text-input {
+      width: 100%;
+    }
+
+    #resume-otp-form .secondary-btn {
+      grid-column: span 2;
     }
 
     .inline-form {
@@ -205,7 +220,8 @@
       width: 220px;
     }
 
-    .inline-form[hidden] {
+    .inline-form[hidden],
+    .reference-actions .inline-form[hidden] {
       display: none;
     }
 
@@ -1087,11 +1103,14 @@
       .card { padding: 24px 18px; }
       .reference-banner { grid-template-columns: 1fr; }
       .reference-actions, .inline-form { justify-content: flex-start; }
+      .reference-actions { grid-template-columns: minmax(0, 1fr) auto auto; }
     }
 
     @media (max-width: 680px) {
       .two-col, .ubo-grid { grid-template-columns: 1fr; }
       .inline-form .text-input { width: 100%; }
+      .reference-actions { grid-template-columns: 1fr 1fr; }
+      .reference-actions .inline-form .text-input { grid-column: 1 / -1; }
       .document-url span { max-width: 220px; }
     }
   </style>
