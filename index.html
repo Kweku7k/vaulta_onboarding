@@ -205,6 +205,10 @@
       width: 220px;
     }
 
+    .inline-form[hidden] {
+      display: none;
+    }
+
     .sections {
       display: flex;
       flex-direction: column;
@@ -1124,7 +1128,7 @@
           <section class="reference-banner" aria-label="Resume onboarding">
             <div>
               <p class="reference-title">Resume with your KYC ID</p>
-              <p class="reference-copy">Use your existing reference to reload a saved draft or keep working through later stages.</p>
+              <p class="reference-copy">Use your existing reference to reload a saved draft or keep working through later stages. We'll email a code to the address on the draft to confirm it's you.</p>
               <div id="reference-display" class="reference-code">KYC ID not generated yet</div>
             </div>
             <div class="reference-actions">
@@ -1132,6 +1136,10 @@
                 <input type="text" id="resume-reference-id" class="text-input" placeholder="Enter KYC ID">
                 <button type="submit" class="secondary-btn">Resume</button>
                 <button type="button" id="copy-reference-btn" class="ghost-btn">Copy ID</button>
+              </form>
+              <form id="resume-otp-form" class="inline-form" hidden>
+                <input type="text" id="resume-otp-input" class="text-input" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="6-digit code" aria-label="Email verification code">
+                <button type="submit" class="secondary-btn">Verify code</button>
               </form>
             </div>
           </section>
@@ -2470,14 +2478,52 @@
       updateProgress();
     }
 
-    async function loadResume(referenceId) {
+    // Loading a draft needs a code emailed to the address on it; the KYC ID alone isn't enough.
+    var pendingResumeId = '';
+
+    async function requestResumeCode(referenceId) {
       if (!referenceId) {
         showToast('Enter a KYC ID to resume.', 'error');
         return;
       }
 
       try {
-        var response = await fetch(API_BASE + '/api/v2/onboarding/resume/' + encodeURIComponent(referenceId));
+        var response = await fetch(API_BASE + '/api/v2/onboarding/resume/' + encodeURIComponent(referenceId) + '/otp/send', {
+          method: 'POST',
+          headers: { 'X-Recaptcha-Token': await getRecaptchaToken('resume_otp') }
+        });
+        var data = await response.json();
+        var payload = parsePayload(data);
+        if (!response.ok) {
+          throw new Error(payload.detail || 'Could not send the verification code.');
+        }
+
+        pendingResumeId = referenceId;
+        document.getElementById('resume-otp-form').hidden = false;
+        document.getElementById('resume-otp-input').value = '';
+        document.getElementById('resume-otp-input').focus();
+        showToast('Code sent to ' + (payload.email || 'your email') + '. It expires in 10 minutes.', 'success');
+      } catch (err) {
+        showToast(err.message || 'Could not send the verification code.', 'error');
+      }
+    }
+
+    async function loadResume(referenceId, otp) {
+      if (!referenceId) {
+        showToast('Enter a KYC ID to resume.', 'error');
+        return;
+      }
+      if (!/^[0-9]{6}$/.test(otp || '')) {
+        showToast('Enter the 6-digit code we emailed you.', 'error');
+        return;
+      }
+
+      try {
+        var response = await fetch(API_BASE + '/api/v2/onboarding/resume/' + encodeURIComponent(referenceId), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Recaptcha-Token': await getRecaptchaToken('resume') },
+          body: JSON.stringify({ otp: otp })
+        });
         var data = await response.json();
         var payload = parsePayload(data);
         if (!response.ok) {
@@ -2486,6 +2532,8 @@
 
         hydrateResume(payload);
         setReferenceId(referenceId);
+        pendingResumeId = '';
+        document.getElementById('resume-otp-form').hidden = true;
         showToast('Resumed onboarding for ' + referenceId + '.', 'success');
       } catch (err) {
         showToast(err.message || 'Could not load onboarding draft.', 'error');
@@ -2803,7 +2851,18 @@
 
     document.getElementById('resume-form').addEventListener('submit', function (event) {
       event.preventDefault();
-      loadResume(document.getElementById('resume-reference-id').value.trim());
+      requestResumeCode(document.getElementById('resume-reference-id').value.trim());
+    });
+
+    document.getElementById('resume-otp-form').addEventListener('submit', function (event) {
+      event.preventDefault();
+      loadResume(pendingResumeId, document.getElementById('resume-otp-input').value.trim());
+    });
+
+    document.getElementById('resume-reference-id').addEventListener('input', function () {
+      // A code is tied to the KYC ID it was sent for.
+      pendingResumeId = '';
+      document.getElementById('resume-otp-form').hidden = true;
     });
 
     document.getElementById('copy-reference-btn').addEventListener('click', async function () {
@@ -2927,7 +2986,9 @@
 
     var queryReferenceId = getQueryReferenceId();
     if (queryReferenceId) {
-      loadResume(queryReferenceId);
+      // Don't email a code on every page load; let the user ask for one.
+      document.getElementById('resume-reference-id').value = queryReferenceId;
+      showToast('Click Resume and we\'ll email you a code to load this draft.', 'success');
     }
   })();
   </script>
